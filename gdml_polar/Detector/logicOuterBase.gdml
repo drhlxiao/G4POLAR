@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyTopBase"    value="323."/>
+      <constant name="zTopBase"     value="3."/>
+      <constant name="xyMiddleBase" value="428."/>
+      <constant name="zMiddleBase"  value="64."/>
+      <constant name="xyBottomBase" value="450."/>
+      <constant name="zBottomBase"  value="4."/>
+      <constant name="thickBase"    value="3."/>
+      <constant name="xyOuterGrid"  value="60."/>
+   </define>
+   
+   <materials>
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the Base of the detector ! G4_Al -->
+      <material name="matBase" Z="13" state="solid">
+         <D unit="g/cm3" value="2.699"/>
+         <atom unit="g/mole" value="26.9815"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <!-- Define Base without grids -->
+      <polyhedra name="solidOuterBase" startphi="45" deltaphi="360" numsides="4" aunit="deg"  lunit="mm">
+         <zplane rmax="xyBottomBase/2." rmin="xyMiddleBase/2.-thickBase" z="0"/>
+         <zplane rmax="xyBottomBase/2." rmin="xyMiddleBase/2.-thickBase" z="zBottomBase"/>
+         <zplane rmax="xyMiddleBase/2." rmin="xyMiddleBase/2.-thickBase" z="zBottomBase"/>
+         <zplane rmax="xyMiddleBase/2." rmin="xyMiddleBase/2.-thickBase" z="zBottomBase+zMiddleBase-thickBase"/>
+         <zplane rmax="xyMiddleBase/2." rmin="2.5*xyOuterGrid"           z="zBottomBase+zMiddleBase-thickBase"/>
+         <zplane rmax="xyMiddleBase/2." rmin="2.5*xyOuterGrid"           z="zBottomBase+zMiddleBase"/>
+         <zplane rmax="xyTopBase/2."    rmin="2.5*xyOuterGrid"           z="zBottomBase+zMiddleBase"/>
+         <zplane rmax="xyTopBase/2."    rmin="2.5*xyOuterGrid"           z="zBottomBase+zMiddleBase+zTopBase"/>
+      </polyhedra>
+   </solids>
+   
+   <structure>
+      <volume name="logicOuterBase">
+         <materialref ref="matBase"/>
+         <solidref ref="solidOuterBase"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="grey"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-152"/>  
+      </volume>
+   </structure>
+   
+   <setup name="Default" version="1.0">
+      <world ref="logicOuterBase"/>
+   </setup>
+</gdml>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyCfBoxTop"    value="300."/>
+      <constant name="zCfBoxTop"     value="175."/>
+      <constant name="xyCfBoxBottom" value="323."/>
+      <constant name="zCfBoxBottom"  value="3."/>
+      <constant name="thickCfBox"    value="3."/>
+      <constant name="rConeCfBox"    value="1.5"/>
+      <constant name="zConeCfBox"    value="3.5"/>
+   </define>
+   
+   <materials>
+      <!-- Define Element Hydrogen(H) -->
+      <isotope name="H1" Z="1" N="1">
+         <atom unit="g/mole" value="1.00782503081372"/>
+      </isotope>
+      <isotope name="H2" Z="1" N="2">
+      	 <atom unit="g/mole" value="2.01410199966617"/>
+      </isotope>
+      <element name="Hydrogen">
+      	 <fraction n="0.999885" ref="H1"/>
+      	 <fraction n="0.000115" ref="H2"/>
+      </element>
+
+      <!-- Define Element Carbon(C) -->
+      <isotope name="C12" Z="6" N="12">
+         <atom unit="g/mole" value="12"/>
+      </isotope>
+      <isotope name="C13" Z="6" N="13">
+   	     <atom unit="g/mole" value="13.0034"/>
+      </isotope>
+      <element name="Carbon">
+   	     <fraction n="0.9893" ref="C12"/>
+   	     <fraction n="0.0107" ref="C13"/>
+      </element>
+
+      <!-- Define Element Nitrogen(N) -->
+      <isotope name="N14" Z="7" N="14">
+      	 <atom unit="g/mole" value="14.0031"/>
+      </isotope>
+      <isotope name="N15" Z="7" N="15">
+      	 <atom unit="g/mole" value="15.0001"/>
+      </isotope>
+      <element name="Nitrogen">
+      	 <fraction n="0.99632" ref="N14"/>
+      	 <fraction n="0.00368" ref="N15"/>
+      </element>
+
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the Carbon fiber Box ~~ Polyacrylonitrile -->
+      <material name="matCfBox" state="solid">
+      	   <D unit="g/cm3" value="1.6"/>
+      	   <composite n="3" ref="Hydrogen"/>
+      	   <composite n="3" ref="Carbon"/>
+      	   <composite n="1" ref="Nitrogen"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <polyhedra name="solidFullCfBox" startphi="45" deltaphi="360" numsides="4" aunit="deg"  lunit="mm">
+         <zplane rmax="xyCfBoxBottom/2." rmin="xyCfBoxTop/2.-thickCfBox" z="0"/>
+         <zplane rmax="xyCfBoxBottom/2." rmin="xyCfBoxTop/2.-thickCfBox" z="zCfBoxBottom"/>
+         <zplane rmax="xyCfBoxTop/2."    rmin="xyCfBoxTop/2.-thickCfBox" z="zCfBoxBottom"/>
+         <zplane rmax="xyCfBoxTop/2."    rmin="xyCfBoxTop/2.-thickCfBox" z="zCfBoxBottom+zCfBoxTop-thickCfBox"/>
+         <zplane rmax="xyCfBoxTop/2."    rmin="0"                        z="zCfBoxBottom+zCfBoxTop-thickCfBox"/>
+         <zplane rmax="xyCfBoxTop/2."    rmin="0"                        z="zCfBoxBottom+zCfBoxTop"/>
+      </polyhedra>
+
+      <tube name="solidConeCfBox" rmin="0." rmax="rConeCfBox" z="zConeCfBox" startphi="0." deltaphi="360." aunit="deg" lunit="mm"/>
+
+      <subtraction name="solidTemp1CfBox">
+         <first  ref="solidFullCfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos1CfBox" x="-120." y="-120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp2CfBox">
+         <first  ref="solidTemp1CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos2CfBox" x="-60." y="-120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp3CfBox">
+         <first  ref="solidTemp2CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos3CfBox" x="0." y="-120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp4CfBox">
+         <first  ref="solidTemp3CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos4CfBox" x="60." y="-120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp5CfBox">
+         <first  ref="solidTemp4CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos5CfBox" x="120." y="-120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+
+      <subtraction name="solidTemp6CfBox">
+         <first  ref="solidTemp5CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos6CfBox" x="-120." y="-60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp7CfBox">
+         <first  ref="solidTemp6CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos7CfBox" x="-60." y="-60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp8CfBox">
+         <first  ref="solidTemp7CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos8CfBox" x="0." y="-60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp9CfBox">
+         <first  ref="solidTemp8CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos9CfBox" x="60." y="-60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp10CfBox">
+         <first  ref="solidTemp9CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos10CfBox" x="120." y="-60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+
+      <subtraction name="solidTemp11CfBox">
+         <first  ref="solidTemp10CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos11CfBox" x="-120." y="0." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp12CfBox">
+         <first  ref="solidTemp11CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos12CfBox" x="-60." y="0." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp13CfBox">
+         <first  ref="solidTemp12CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos13CfBox" x="0." y="0." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp14CfBox">
+         <first  ref="solidTemp13CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos14CfBox" x="60." y="0." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp15CfBox">
+         <first  ref="solidTemp14CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos15CfBox" x="120." y="0." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+
+      <subtraction name="solidTemp16CfBox">
+         <first  ref="solidTemp15CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos16CfBox" x="-120." y="60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp17CfBox">
+         <first  ref="solidTemp16CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos17CfBox" x="-60." y="60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp18CfBox">
+         <first  ref="solidTemp17CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos18CfBox" x="0." y="60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp19CfBox">
+         <first  ref="solidTemp18CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos19CfBox" x="60." y="60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp20CfBox">
+         <first  ref="solidTemp19CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos20CfBox" x="120." y="60." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+
+      <subtraction name="solidTemp21CfBox">
+         <first  ref="solidTemp20CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos21CfBox" x="-120." y="120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp22CfBox">
+         <first  ref="solidTemp21CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos22CfBox" x="-60." y="120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp23CfBox">
+         <first  ref="solidTemp22CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos23CfBox" x="0." y="120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidTemp24CfBox">
+         <first  ref="solidTemp23CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos24CfBox" x="60." y="120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidCfBox">
+         <first  ref="solidTemp24CfBox"/>
+         <second ref="solidConeCfBox"/>
+         <position name="pos25CfBox" x="120." y="120." z="zCfBoxBottom+zCfBoxTop-zConeCfBox/2." unit="mm"/>
+      </subtraction>
+   </solids>
+
+   <structure>
+      <volume name="logicCfBox">
+         <materialref ref="matCfBox"/>
+         <solidref ref="solidCfBox"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="yes"/>
+         <auxiliary auxtype="color"       auxvalue="blue"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-81"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicCfBox"/>
+   </setup>
+</gdml>

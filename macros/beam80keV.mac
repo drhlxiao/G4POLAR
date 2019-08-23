@@ -1,0 +1,47 @@
+
+# reading Geometry from File
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+/polar/det/setVolumes detector
+
+#/polar/det/setVolumes spaceLab
+/run/initialize
+# reading Geometry from Fil
+/polar/Analysis/setThreshold  5 keV
+/polar/Analysis/setkB  0.143
+/polar/Analysis/setAnalysisLevel  4
+/polar/Analysis/setQuickLook 2
+/polar/Analysis/setPreC  1000
+/polar/Analysis/setPreS  1000
+
+/polar/Analysis/setCalibrationFileName  data/response.root
+
+# reading Geometry from Fil
+
+/gps/particle gamma
+#/gps/ene/type Pow
+#/gps/ene/alpha -1.0000e+00
+#/gps/ene/min 1.0000e-02 MeV
+#/gps/ene/max 1.0000e+02 MeV
+#/gps/pos/type Plane
+#/gps/pos/shape Annulus
+#/gps/pos/centre 0.0000e+00 0.0000e+00 0.0000e+00  cm
+#/gps/pos/radius 2 cm
+#/gps/pos/rot1 -1.0000e+00  -0.0000e+00 -0.0000e+00
+#/gps/pos/rot2 -0.0000e+00  1.0000e+00 0.0000e+00
+#/gps/ang/rot1 -1.0000e+00  -0.0000e+00 -0.0000e+00
+#/gps/ang/rot2 0.0000e+00  -1.0000e+00 -0.0000e+00
+#/gps/ang/user_coor true
+#/gps/ang/type   cos 
+#/gps/ang/mintheta 0.0000e+00 degree
+#/gps/ang/maxtheta 9.0000e+01 degree
+
+#/gps/particle e-
+/gps/energy 80 keV
+/gps/position 0.2 0.2 10 cm
+/gps/direction 0 0  -1
+/gps/number 1
+/gps/polarization 1 0 0
+#
+
+/run/beamOn 100000

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE gdml [
+<!ENTITY materials SYSTEM "materialWorld.xml">
+]>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+
+   <define>
+      <constant name="xyWorld" value="100."/>
+   </define>
+
+   <!-- The world material is defined in materialWorld.xml -->
+   &materials;
+ 
+   <solids>
+      <box name="solidWorld" x="xyWorld" y="xyWorld" z="xyWorld" lunit="m"/>
+   </solids>
+
+   <structure>
+      <volume name="physWorld">
+         <materialref ref="G4_Galactic"/>
+         <solidref ref="solidWorld"/>
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="physWorld"/>
+   </setup>
+</gdml>

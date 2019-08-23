@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="x1BottomFEEParts" value="30."/>
+      <constant name="y1BottomFEEParts" value="10.16"/>
+      <constant name="z1BottomFEEParts" value="7.9"/>
+      <constant name="x2BottomFEEParts" value="18.2"/>
+      <constant name="y2BottomFEEParts" value="4.73"/>
+      <constant name="z2BottomFEEParts" value="4.7"/>
+
+      <constant name="xMiddleFEEParts" value="36.8"/>
+      <constant name="yMiddleFEEParts" value="1.5"/>
+      <constant name="zMiddleFEEParts" value="6."/>
+
+      <constant name="xTopFEEParts" value="28.5"/>
+      <constant name="yTopFEEParts" value="5.7"/>
+      <constant name="zTopFEEParts" value="6.6"/>
+   </define>
+   
+   <materials>
+      <!-- Define Element Hydrogen(H) -->
+      <isotope name="H1" Z="1" N="1">
+         <atom unit="g/mole" value="1.00782503081372"/>
+      </isotope>
+      <isotope name="H2" Z="1" N="2">
+      	   <atom unit="g/mole" value="2.01410199966617"/>
+      </isotope>
+      <element name="Hydrogen">
+      	   <fraction n="0.999885" ref="H1"/>
+      	   <fraction n="0.000115" ref="H2"/>
+      </element>
+
+      <!-- Define Element Carbon(C) -->
+      <isotope name="C12" Z="6" N="12">
+         <atom unit="g/mole" value="12"/>
+      </isotope>
+      <isotope name="C13" Z="6" N="13">
+   	   <atom unit="g/mole" value="13.0034"/>
+      </isotope>
+      <element name="Carbon">
+   	   <fraction n="0.9893" ref="C12"/>
+   	   <fraction n="0.0107" ref="C13"/>
+      </element>
+
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the FEE Parts ~~ Si -->
+      <material name="matFEEParts" state="solid">
+         <D unit="g/cm3" value="1.31"/>
+         <fraction n="0.085" ref="Hydrogen"/>
+         <fraction n="0.915" ref="Carbon"/>
+      </material>
+   </materials>
+   
+   <solids>
+       <box name="solid1BottomFEEParts" x="x1BottomFEEParts" y="y1BottomFEEParts" z="z1BottomFEEParts" lunit="mm"/>
+       <box name="solid2BottomFEEParts" x="x2BottomFEEParts" y="y2BottomFEEParts" z="z2BottomFEEParts" lunit="mm"/>
+       <box name="solidMiddleFEEParts" x="xMiddleFEEParts" y="yMiddleFEEParts" z="zMiddleFEEParts" lunit="mm"/>
+       <box name="solidTopFEEParts" x="xTopFEEParts" y="yTopFEEParts" z="zTopFEEParts" lunit="mm"/>
+
+       <union name="solidBottomFEEParts">
+          <first  ref="solid1BottomFEEParts"/>
+          <second ref="solid2BottomFEEParts"/>
+          <position name="pos1FEEParts" y="(y1BottomFEEParts+y2BottomFEEParts)/2." unit="mm"/>
+       </union>
+
+       <union name="solidFEEPartsTemp1">
+          <first  ref="solidBottomFEEParts"/>
+          <second ref="solidMiddleFEEParts"/>
+          <position name="pos2FEEParts" y="35.47" z="z1BottomFEEParts/2.+1.5+zMiddleFEEParts/2." unit="mm"/>
+       </union>
+       <union name="solidFEEPartsTemp2">
+          <first ref="solidFEEPartsTemp1"/>
+          <second ref="solidTopFEEParts"/>
+          <position name="pos3FEEParts" y="24.87" z="z1BottomFEEParts/2.+1.5+zMiddleFEEParts+1.2+zTopFEEParts/2." unit="mm"/>
+       </union>
+       <union name="solidFEEParts">
+          <first ref="solidFEEPartsTemp2"/>
+          <second ref="solidTopFEEParts"/>
+          <position name="pos4FEEParts" y="0.57" z="z1BottomFEEParts/2.+1.5+zMiddleFEEParts+1.2+zTopFEEParts/2." unit="mm"/>
+       </union>
+   </solids>
+
+   <structure>
+      <volume name="logicFEEParts">
+         <materialref ref="matFEEParts"/>
+         <solidref ref="solidFEEParts"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="lightBlue"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-133.45"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicFEEParts"/>
+   </setup>
+</gdml>

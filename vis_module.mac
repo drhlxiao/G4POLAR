@@ -1,0 +1,119 @@
+
+
+# reading Geometry from File
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+#/polar/det/setVolumes detector
+
+#/polar/det/setVolumes spaceLab
+/run/initialize
+
+/vis/scene/create
+
+#/vis/open OGL
+#/vis/open OGL 800x800-0+0
+#use qt
+/vis/open OGLSQt
+
+#
+# Use this open statement to create an OpenInventor view:
+#/vis/open OIX
+#
+# Use this open statement to create a .prim file suitable for
+# viewing in DAWN:
+#/vis/open DAWNFILE
+#
+# Use this open statement to create a .heprep file suitable for
+# viewing in HepRApp:
+#/vis/open HepRepFile
+#
+# Use this open statement to create a .wrl file suitable for
+# viewing in a VRML viewer:
+/vis/open VRML2FILE
+#/vis/open RayTracer
+#
+# Disable auto refresh and quieten vis messages whilst scene and
+# trajectories are established:
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
+#
+# Draw geometry:
+/vis/drawVolume
+#
+# Specify view angle:
+/vis/viewer/set/viewpointThetaPhi 90 0.
+#
+# Specify zoom value:
+/vis/viewer/zoom 1 
+#
+# Specify style (surface, wireframe, auxiliary edges,...)
+#/vis/viewer/set/style wireframe
+#/vis/viewer/set/auxiliaryEdge true
+#/vis/viewer/set/lineSegmentsPerCircle 100
+#
+# Draw coordinate axes:
+#/vis/scene/add/axes 0 0 0 20 mm
+#
+# Draw smooth trajectories at end of event, showing trajectory points
+# as markers 2 pixels wide:
+/vis/scene/add/trajectories smooth
+/vis/modeling/trajectories/create/drawByCharge
+# Draw hits at end of event:
+/vis/scene/add/hits
+#
+# To draw only gammas:
+#/vis/filtering/trajectories/create/particleFilter
+#/vis/filtering/trajectories/particleFilter-0/add gamma
+#
+# To invert the above, drawing all particles except gammas,
+# keep the above two lines but also add:
+#/vis/filtering/trajectories/particleFilter-0/invert true
+#
+# Many other options are available with /vis/modeling and /vis/filtering.
+# For example, to select colour by particle ID:
+/vis/modeling/trajectories/create/drawByParticleID
+/vis/modeling/trajectories/drawByParticleID-0/default/setDrawStepPts true
+#/vis/modeling/trajectories/drawByParticleID-0/default/setStepPtsSize 1
+# To select or override default colours (note: e+ is blue by default):
+#/vis/modeling/trajectories/list
+#/vis/modeling/trajectories/drawByParticleID-0/set e+ yellow
+#
+# To superimpose all of the events from a given run:
+#/vis/scene/endOfEventAction accumulate
+/vis/scene/endOfEventAction refresh
+#
+# Re-establish auto refreshing and verbosity:
+/vis/viewer/set/autoRefresh true
+/vis/verbose warnings
+#
+
+/gps/particle  gamma
+#/gps/ene/type Pow
+/gps/ene/type Mono
+#/gps/ene/alpha -1.0000e+00
+#/gps/ene/min 1.0000e-02 MeV
+#/gps/ene/max 1.0000e+02 MeV
+#/gps/pos/type Plane
+#/gps/pos/shape Annulus
+#/gps/pos/centre 0.0000e+00 0.0000e+00 10.0000e+00  cm
+#/gps/pos/radius 20 cm
+#/gps/pos/rot1 -1.0000e+00  -0.0000e+00 -0.0000e+00
+#/gps/pos/rot2 -0.0000e+00  1.0000e+00 0.0000e+00
+#/gps/ang/rot1 -1.0000e+00  -0.0000e+00 -0.0000e+00
+#/gps/ang/rot2 0.0000e+00  -1.0000e+00 -0.0000e+00
+#/gps/ang/user_coor true
+#/gps/ang/type   cos 
+#/gps/ang/mintheta 0.0000e+00 degree
+#/gps/ang/maxtheta 9.0000e+01 degree
+
+#/gps/particle e-
+/gps/energy 40 keV
+#/gps/ene/type Mono
+/gps/position 0.2 0.2 10 cm
+/gps/direction 0 0 -1
+/gps/polarization 1 0 0
+
+/gps/number 1
+#/gps/ang/type   iso
+
+/run/beamOn 1

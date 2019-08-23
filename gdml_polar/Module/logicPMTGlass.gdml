@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyPMTGlass" value="52."/>
+      <constant name="zPMTGlass"  value="1.5"/>
+   </define>
+   
+   <materials>
+      <!-- Define Element Boron(B) -->
+      <element name="Boron" formula="B" Z="5">
+         <atom unit="g/mole" value="10.811"/>
+      </element>
+       
+      <!-- Define Element Oxygen(O) -->
+      <element name="Oxygen" formula="O" Z="8">
+          <atom unit="g/mole" value="16.00"/>
+      </element>
+       
+      <!-- Define Element Sodium(Na) -->
+      <element name="Sodium" formula="Na" Z="11">
+          <atom unit="g/mole" value="22.98976928"/>
+      </element>
+       
+       <!-- Define Element Aluminium(Al) -->
+       <element name="Aluminium" formula="Al" Z="13">
+           <atom unit="g/mole" value="26.98154"/>
+       </element>
+       
+       <!-- Define Element Silicon(Si) -->
+       <element name="Silicon" formula="Si" Z="14">
+           <atom unit="g/mole" value="28.0855"/>
+       </element>
+       
+       <!-- Define Element Potassium(K) -->
+       <element name="Potassium" formula="K" Z="19">
+           <atom unit="g/mole" value="39.0983"/>
+       </element>
+
+      <!--Need to define more detailly -->
+      <!-- Define material for the PMT Glass ~~ Borosilicate Glass -->
+      <material name="matPMTGlass" state="solid">
+         <D unit="g/cm3" value="2.23"/>
+         <fraction n="0.040064" ref="Boron"/>
+         <fraction n="0.539562" ref="Oxygen"/>
+         <fraction n="0.028191" ref="Sodium"/>
+         <fraction n="0.011644" ref="Aluminium"/>
+         <fraction n="0.377220" ref="Silicon"/>
+         <fraction n="0.003321" ref="Potassium"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <box name="solidPMTGlass" x="xyPMTGlass" y="xyPMTGlass" z="zPMTGlass" lunit="mm"/>
+   </solids>
+
+   <structure>
+      <volume name="logicPMTGlass">
+         <materialref ref="matPMTGlass"/>
+         <solidref ref="solidPMTGlass"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="yellow"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-89.25"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicPMTGlass"/>
+   </setup>
+</gdml>

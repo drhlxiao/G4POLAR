@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Created by FreeCAD gdml converter (http://polar.psi.ch/cadmc) at Mon 29 Jan 2018 17:31:51 CET-->
+
+  <gdml xmlns:gdml="http://cern.ch/2001/Schemas/GDML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+    <define>
+      <constant name="HALFPI" value="pi/2"/>
+      <constant name="PI" value="1.0*pi"/>
+      <constant name="TWOPI" value="2.0*pi"/>
+      <position name="center" unit="mm" x="0.000000e+00" y="0.000000e+00" z="0.000000e+00"/>
+      <rotation name="identity" unit="deg" x="0.000000e+00" y="0.000000e+00" z="0.000000e+00"/>
+    </define>
+    <materials>
+      <material Z="1" formula="H" name="Galaxy">
+        <D unit="g/cm3" value="1e-25"/>
+        <atom value="1.0"/>
+      </material>
+    </materials>
+    <solids>
+      <box lunit="m" name="__box_world__" x="3.000000e+04" y="3.000000e+04" z="3.000000e+04"/>
+    </solids>
+    <structure>
+      <volume name="world">
+        <materialref ref="G4_Galactic"/>
+        <solidref ref="__box_world__"/>
+        <physvol name="_phys_0">
+          <file name="gdml/RD_0.gdml"/>
+          <positionref ref="center"/>
+          <rotationref ref="identity"/>
+        </physvol>
+        <physvol name="_phys_1">
+          <file name="gdml/solarPanelFrame_1.gdml"/>
+          <positionref ref="center"/>
+          <rotationref ref="identity"/>
+        </physvol>
+        <physvol name="_phys_2">
+          <file name="gdml/TG2body_2.gdml"/>
+          <positionref ref="center"/>
+          <rotationref ref="identity"/>
+        </physvol>
+        <physvol name="_phys_3">
+          <file name="gdml/SolarPanelSilicon_3.gdml"/>
+          <positionref ref="center"/>
+          <rotationref ref="identity"/>
+        </physvol>
+      </volume>
+    </structure>
+    <setup name="__setup__world" version="1.0">
+      <world ref="world"/>
+    </setup>
+  </gdml>
+
+<!--  Created by FreeCAD gdml converter (http://polar.psi.ch/cadmc) at Mon 29 Jan 2018 17:31:51 CET-->
+

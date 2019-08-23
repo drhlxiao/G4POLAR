@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+
+   <define>
+      <constant name="h1SpaceLab"    value="5000."/>
+      <constant name="h2SpaceLab"    value="1400."/>
+      <constant name="h3SpaceLab"    value="5000."/>
+      <constant name="r1SpaceLab"    value="1400."/>
+      <constant name="r2SpaceLab"    value="1675."/>
+      <constant name="thickSpaceLab" value="40."/>
+      
+      <constant name="xyInnerPlatform" value="422."/>
+      <constant name="xyOuterPlatform" value="500."/>
+      <constant name="zPlatform"       value="228."/>
+      
+      <constant name="rTube"   value="100."/>
+      <constant name="zTube"   value="600."/>      
+      <constant name="posTube" value="3400."/>
+      
+      <constant name="rMinTopRing"    value="45."/>
+      <constant name="rMaxTopRing"    value="65."/>
+      <constant name="zTopRing"       value="20."/>
+      <constant name="rMinBottomRing" value="80."/>
+      <constant name="rMaxBottomRing" value="100."/>
+      <constant name="zBottomRing"    value="20."/>
+      <constant name="rTubeHolder"    value="10."/>
+      <constant name="zTubeHolder"    value="295."/>        
+   </define>
+   
+   <materials>
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the Space Lab ~~ G4_Al -->
+      <material name="matSpaceLab" Z="13" state="solid">
+         <D unit="g/cm3" value="2.699"/>
+         <atom unit="g/mole" value="26.9815"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <polycone name="solidPrimarySpaceLab" startphi="0" deltaphi="360" aunit="deg"  lunit="mm">
+         <zplane rmax="r2SpaceLab" rmin="0"                         z="-h2SpaceLab/2.-h3SpaceLab"/>
+         <zplane rmax="r2SpaceLab" rmin="0"                         z="-h2SpaceLab/2.-h3SpaceLab+thickSpaceLab"/>
+         <zplane rmax="r2SpaceLab" rmin="-thickSpaceLab+r2SpaceLab" z="-h2SpaceLab/2.-h3SpaceLab+thickSpaceLab"/>
+         <zplane rmax="r2SpaceLab" rmin="-thickSpaceLab+r2SpaceLab" z="-h2SpaceLab/2."/>
+         <zplane rmax="r1SpaceLab" rmin="-thickSpaceLab+r1SpaceLab" z="h2SpaceLab/2."/>
+         <zplane rmax="r1SpaceLab" rmin="-thickSpaceLab+r1SpaceLab" z="h2SpaceLab/2.+h1SpaceLab-thickSpaceLab"/>
+         <zplane rmax="r1SpaceLab" rmin="0"                         z="h2SpaceLab/2.+h1SpaceLab-thickSpaceLab"/>
+         <zplane rmax="r1SpaceLab" rmin="0"                         z="h2SpaceLab/2.+h1SpaceLab"/>
+      </polycone>
+      
+      <tube name="solidTube" rmin="0" rmax="rTube" z="zTube" startphi="0" deltaphi="360" aunit="deg"  lunit="mm"/>
+      
+      <union name="solidTmpSpaceLab">
+         <first ref="solidPrimarySpaceLab"/>
+         <second ref="solidTube"/>
+         <position name="pos1" x="r1SpaceLab+zTube/2." z="h2SpaceLab/2.+h1SpaceLab-posTube-rTube/2." unit="mm"/>
+         <rotation name="rot1" y="90" unit="deg"/>
+      </union>
+      
+      <box name="solidBox" x="xyOuterPlatform" y="xyOuterPlatform" z="zPlatform" lunit="mm"/>
+      
+      <subtraction name="solidTempSpaceLab">
+         <first ref="solidTmpSpaceLab"/>
+         <second ref="solidBox"/>
+         <position name="pos2" x="r1SpaceLab+zPlatform/2." unit="mm"/>
+         <rotation name="rot2" y="90" unit="deg"/>      
+      </subtraction>
+      
+      <polyhedra name="solidPrimaryPlatform" startphi="45" deltaphi="360" numsides="4" aunit="deg"  lunit="mm">
+         <zplane rmax="xyOuterPlatform/2." rmin="xyInnerPlatform/2." z="0"/>
+         <zplane rmax="xyOuterPlatform/2." rmin="xyInnerPlatform/2." z="zPlatform"/>
+      </polyhedra>      
+      
+      <polycone name="solidSubPlatform" startphi="0" deltaphi="360" aunit="deg"  lunit="mm">
+         <zplane rmax="r2SpaceLab" rmin="0" z="-h2SpaceLab/2."/>
+         <zplane rmax="r1SpaceLab" rmin="0" z="h2SpaceLab/2."/>
+      </polycone>    
+      
+      <subtraction name="solidTempPlatform">
+         <first ref="solidPrimaryPlatform"/>
+         <second ref="solidSubPlatform"/>
+         <position name="pos3" z="-r1SpaceLab" unit="mm"/>
+         <rotation name="rot3" y="-90" unit="deg"/>      
+      </subtraction>      
+         
+      <union name="solidSpaceLabWithoutHolder">
+         <first ref="solidTempSpaceLab"/>
+         <second ref="solidTempPlatform"/>
+         <position name="pos4" x="r1SpaceLab" unit="mm"/>
+         <rotation name="rot4" y="90" unit="deg"/>
+      </union> 
+      
+      <!-- Define holder on Space Lab -->      
+      <tube name="solidTopRing" rmin="rMinTopRing" rmax="rMaxTopRing" z="zTopRing" startphi="0" deltaphi="360" aunit="deg"  lunit="mm"/>
+      <tube name="solidBottomRing" rmin="rMinBottomRing" rmax="rMaxBottomRing" z="zBottomRing" startphi="0" deltaphi="360" aunit="deg"  lunit="mm"/>
+      <tube name="solidTubeHolder" rmin="0." rmax="rTubeHolder" z="zTubeHolder" startphi="0" deltaphi="360" aunit="deg"  lunit="mm"/>
+      
+      <union name="solidDoubleRing">
+         <first ref="solidBottomRing"/>
+         <second ref="solidTopRing"/>
+         <position name="pos1Holder" z="280." unit="mm"/>
+      </union>
+
+      <union name="solidHolderTemp1">
+         <first ref="solidDoubleRing"/>
+         <second ref="solidTubeHolder"/>
+         <position name="pos2Holder" y="-72.5" z="140." unit="mm"/>
+         <rotation name="rot1Holder" x="-7." unit="deg"/>
+      </union>
+      <union name="solidHolderTemp2">
+         <first ref="solidHolderTemp1"/>
+         <second ref="solidTubeHolder"/>
+         <position name="pos3Holder" x="62.79" y="-36.25" z="140." unit="mm"/>
+         <rotation name="rot2Holder" x="-7." z="60." unit="deg"/>
+      </union>      
+      <union name="solidHolderTemp3">
+         <first ref="solidHolderTemp2"/>
+         <second ref="solidTubeHolder"/>
+         <position name="pos4Holder" x="62.79" y="36.25" z="140." unit="mm"/>
+         <rotation name="rot3Holder" x="-7." z="120." unit="deg"/>
+      </union>  
+      <union name="solidHolderTemp4">
+         <first ref="solidHolderTemp3"/>
+         <second ref="solidTubeHolder"/>
+         <position name="pos5Holder" y="72.5" z="140." unit="mm"/>
+         <rotation name="rot4Holder" x="-7." z="180." unit="deg"/>
+      </union>  
+      <union name="solidHolderTemp5">
+         <first ref="solidHolderTemp4"/>
+         <second ref="solidTubeHolder"/>
+         <position name="pos6Holder" x="-62.79" y="36.25" z="140." unit="mm"/>
+         <rotation name="rot5Holder" x="-7." z="240." unit="deg"/>
+      </union>  
+      <union name="solidHolder">
+         <first ref="solidHolderTemp5"/>
+         <second ref="solidTubeHolder"/>
+         <position name="pos7" x="-62.79" y="-36.25" z="140." unit="mm"/>
+         <rotation name="rot6" x="-7." z="300." unit="deg"/>
+      </union> 
+      
+      <!-- Put the holder on Space Lab -->         
+      <union name="solidSpaceLab">
+         <first ref="solidSpaceLabWithoutHolder"/>
+         <second ref="solidHolder"/>
+         <position name="posHolder" x="r1SpaceLab+zTube+zBottomRing/2." z="h2SpaceLab/2.+h1SpaceLab-posTube-rTube/2." unit="mm"/>
+         <rotation name="rotHolder" y="90" unit="deg"/>
+      </union>        
+   </solids>
+   
+   <structure>
+      <volume name="logicSpaceLab">
+         <materialref ref="matSpaceLab"/>
+         <solidref ref="solidSpaceLab"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="white"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-1780"/>    
+      </volume>
+   </structure>
+   
+   <setup name="Default" version="1.0">
+      <world ref="logicSpaceLab"/>
+   </setup>
+</gdml>

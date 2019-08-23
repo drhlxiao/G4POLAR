@@ -1,0 +1,68 @@
+<!-- This file is defining materials in world -->
+
+   <materials>
+      <!-- Define Element Carbon(C) -->
+      <isotope name="C12" Z="6" N="12">
+         <atom unit="g/mole" value="12"/>
+      </isotope>
+      <isotope name="C13" Z="6" N="13">
+   	     <atom unit="g/mole" value="13.0034"/>
+      </isotope>
+      <element name="Carbon">
+   	     <fraction n="0.9893" ref="C12"/>
+   	     <fraction n="0.0107" ref="C13"/>
+      </element>
+
+      <!-- Define Element Nitrogen(N) -->
+      <isotope name="N14" Z="7" N="14">
+      	 <atom unit="g/mole" value="14.0031"/>
+      </isotope>
+      <isotope name="N15" Z="7" N="15">
+      	 <atom unit="g/mole" value="15.0001"/>
+      </isotope>
+      <element name="Nitrogen">
+      	 <fraction n="0.99632" ref="N14"/>
+      	 <fraction n="0.00368" ref="N15"/>
+      </element>
+      
+      <!-- Define Element Oxygen(O) -->
+      <isotope name="O16" Z="8" N="16">
+         <atom unit="g/mole" value="15.9949"/>
+      </isotope>
+      <isotope name="O17" Z="8" N="17">
+         <atom unit="g/mole" value="16.9991"/>
+      </isotope>
+      <isotope name="O18" Z="8" N="18">
+         <atom unit="g/mole" value="17.9992"/>
+      </isotope>
+      <element name="Oxygen">
+         <fraction n="0.99757" ref="O16"/>
+         <fraction n="0.00038" ref="O17"/>
+         <fraction n="0.00205" ref="O18"/>
+      </element>      
+      
+      <!-- Define Element Argon(Ar) -->
+      <isotope name="Ar36" Z="18" N="36">
+         <atom unit="g/mole" value="35.9675"/>
+      </isotope>
+      <isotope name="Ar38" Z="18" N="38">
+         <atom unit="g/mole" value="37.9627"/>
+      </isotope>
+      <isotope name="Ar40" Z="18" N="40">
+         <atom unit="g/mole" value="39.9624"/>
+      </isotope>
+      <element name="Argon">
+         <fraction n="0.003365" ref="Ar36"/>
+         <fraction n="0.000632" ref="Ar38"/>
+         <fraction n="0.996003" ref="Ar40"/>
+      </element>
+      
+      <!-- Define material for the Environment ~~ G4_AIR now! -->
+      <material name="matEnv" state="gas">
+         <D unit="g/cm3" value="0.00120479"/>
+         <fraction n="0.000124000124000124" ref="Carbon"/>
+         <fraction n="0.755267755267755" ref="Nitrogen"/>
+         <fraction n="0.231781231781232" ref="Oxygen"/>
+         <fraction n="0.0128270128270128" ref="Argon"/>
+      </material>
+   </materials>

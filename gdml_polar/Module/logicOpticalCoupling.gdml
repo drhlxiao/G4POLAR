@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyOpticalCoupling" value="50."/>
+      <constant name="zOpticalCoupling"  value="0.5"/>
+   </define>
+   
+   <materials>
+      <!-- Define Element Oxygen(O) -->
+      <isotope name="O16" Z="8" N="16">
+         <atom unit="g/mole" value="15.9949"/>
+      </isotope>
+      <isotope name="O17" Z="8" N="17">
+         <atom unit="g/mole" value="16.9991"/>
+      </isotope>
+      <isotope name="O18" Z="8" N="18">
+         <atom unit="g/mole" value="17.9992"/>
+      </isotope>
+      <element name="Oxygen">
+         <fraction n="0.99757" ref="O16"/>
+         <fraction n="0.00038" ref="O17"/>
+         <fraction n="0.00205" ref="O18"/>
+      </element>
+      
+      <!-- Define Element Silicon(Si) -->
+      <isotope name="Si28" Z="14" N="28">
+         <atom unit="g/mole" value="27.9769"/>
+      </isotope>
+      <isotope name="Si29" Z="14" N="29">
+         <atom unit="g/mole" value="28.9765"/>
+      </isotope>
+      <isotope name="Si30" Z="14" N="30">
+         <atom unit="g/mole" value="29.9738"/>
+      </isotope>
+      <element name="Silicon">
+         <fraction n="0.922296077703922" ref="Si28"/>
+         <fraction n="0.0468319531680468" ref="Si29"/>
+         <fraction n="0.0308719691280309" ref="Si30"/>
+      </element>
+
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the Optical Coupling ~~ DC93-500 -->
+      <material name="matOpticalCoupling" state="solid">
+      	 <D unit="g/cm3" value="1.08"/>
+         <composite n="2" ref="Oxygen"/>
+         <composite n="1" ref="Silicon"/>
+      </material>
+   </materials>
+
+   <solids>   
+     <box name="solidOpticalCoupling" x="xyOpticalCoupling" y="xyOpticalCoupling" z="zOpticalCoupling" lunit="mm"/>
+   </solids>
+   
+   <structure>
+      <volume name="logicOpticalCoupling">
+         <materialref ref="matOpticalCoupling"/>
+         <solidref ref="solidOpticalCoupling"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="yellow"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-88.25"/>           
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicOpticalCoupling"/>
+   </setup>
+</gdml>

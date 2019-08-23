@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="rPMTPin" value="0.5"/>
+      <constant name="zPMTPin" value="7.5"/>
+   </define>
+   
+   <materials>
+      <!-- Need to define more detailly -->
+      <!-- Define material for the PMT Pin ~ Au -->
+      <material name="matPMTPin" Z="79" state="solid">
+         <D unit="g/cm3" value="19.32"/>
+         <atom unit="g/mole" value="196.9665"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <tube name="solidPMTPin" rmin="0" rmax="rPMTPin" z="zPMTPin" startphi="0" deltaphi="360" aunit="deg" lunit="mm"/>
+   </solids>
+
+   <structure>
+      <volume name="logicPMTPin">
+         <materialref ref="matPMTPin"/>
+         <solidref ref="solidPMTPin"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="yellow"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-108.75"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicPMTPin"/>
+   </setup>
+</gdml>

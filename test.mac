@@ -1,0 +1,17 @@
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+/polar/det/setVolumes detector
+#/polar/Analysis/setOutputFileName  analysis_test.root
+/polar/Analysis/setThreshold  5 keV
+/polar/Analysis/setkB  0.143
+/polar/Analysis/setAnalysisLevel  1
+/polar/Analysis/setQuickLook 0
+/polar/Analysis/setDoCoincidence 1
+#/polar/Analysis/setCalibrationFileName  data/response.root
+#/polar/det/setVolumes spaceLab
+/run/initialize
+#/polar/readParticleFrom  proton.root
+/polar/setGunType  na22
+/polar/setSourcePosition  -86.5 -86.5 0 mm
+/run/beamOn 10000
+

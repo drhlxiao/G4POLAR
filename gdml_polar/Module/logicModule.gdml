@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE gdml [
+<!ENTITY materials SYSTEM "../materialWorld.xml">
+]>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="rTubeModule" value="1.5"/>
+      <constant name="zTubeModule" value="5.935"/>   
+   </define>
+
+   &materials;
+   
+   <solids>
+      <!-- Make z=0 at the center of scintillant!! -->
+      <polyhedra name="solidFullModule" startphi="45" deltaphi="360" numsides="4" aunit="deg" lunit="mm">
+           <zplane rmax="29.8"  rmin="0" z="-137.5"/>
+           <zplane rmax="29.8"  rmin="0" z="-134"/>
+      	   <zplane rmax="27.75" rmin="0" z="-134"/>
+      	   <zplane rmax="27.75" rmin="0" z="-84."/>
+      	   <zplane rmax="26.25" rmin="0" z="-84."/>
+      	   <zplane rmax="26.25" rmin="0" z="94"/>
+      </polyhedra>
+
+      <tube name="solidTubeModule" rmin="0." rmax="rTubeModule" z="zTubeModule" startphi="0." deltaphi="360." aunit="deg" lunit="mm"/>
+
+      <subtraction name="solidModule">
+         <first  ref="solidFullModule"/>
+         <second ref="solidTubeModule"/>
+         <position name="pos1Module" z="94.-zTubeModule/2." unit="mm"/>
+      </subtraction>
+   </solids>  
+   
+   <structure>
+      <volume name="logicModule">
+         <materialref ref="matEnv"/>
+         <solidref ref="solidModule"/>
+         <auxiliary auxtype="isVisible"   auxvalue="no"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="white"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="0"/>
+      </volume>
+   </structure>
+   
+   <setup name="Default" version="1.0">
+      <world ref="logicModule"/>
+   </setup>
+</gdml>   

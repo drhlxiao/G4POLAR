@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xESRInner" value="6.0"/>
+      <constant name="yESRInner" value="0.065"/>
+      <constant name="zESRInner" value="166.0"/>
+   </define>
+
+   <materials>
+      <!-- Define Element Hydrogen(H) -->
+      <isotope name="H1" Z="1" N="1">
+         <atom unit="g/mole" value="1.00782503081372"/>
+      </isotope>
+      <isotope name="H2" Z="1" N="2">
+         <atom unit="g/mole" value="2.01410199966617"/>
+      </isotope>
+      <element name="Hydrogen">
+      	 <fraction n="0.999885" ref="H1"/>
+      	 <fraction n="0.000115" ref="H2"/>
+      </element>
+
+      <!-- Define Element Carbon(C) -->
+      <isotope name="C12" Z="6" N="12">
+         <atom unit="g/mole" value="12"/>
+      </isotope>
+      <isotope name="C13" Z="6" N="13">
+   	   <atom unit="g/mole" value="13.0034"/>
+      </isotope>
+      <element name="Carbon">
+   	   <fraction n="0.9893" ref="C12"/>
+   	   <fraction n="0.0107" ref="C13"/>
+      </element>
+
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for Vikuiti ESR (Enhanced Specular Reflector) -->
+      <material name="matESRInner" state="solid">
+         <D unit="g/cm3" value="1.29"/>
+      	 <composite n="2" ref="Hydrogen"/>
+      	 <composite n="1" ref="Carbon"/>
+      </material>
+   </materials>
+
+   <solids>
+      <box name="solidESRInner" x="xESRInner" y="yESRInner" z="zESRInner" lunit="mm"/>
+   </solids>
+
+   <structure>
+      <volume name="logicESRInner">
+         <materialref ref="matESRInner"/>
+		 <solidref ref="solidESRInner"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="red"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="0"/>  
+	  </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicESRInner"/>
+   </setup>
+</gdml>

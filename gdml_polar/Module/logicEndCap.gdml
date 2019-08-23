@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyInnerTopEndCap"    value="43."/>
+      <constant name="xyInnerBottomEndCap" value="47."/>
+      <constant name="xyOuterTopEndCap"    value="53."/>
+      <constant name="xyOuterBottomEndCap" value="59.6"/>
+      <constant name="zTopEndCap"          value="2."/>
+      <constant name="zMiddleEndCap"       value="0.5"/>
+      <constant name="zBottomEndCap"       value="1.5"/>      
+   </define>
+   
+   <materials>
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the End Cap ~~ G4_Al -->
+      <material name="matEndCap" Z="13" state="solid">
+         <D unit="g/cm3" value="2.699"/>
+         <atom unit="g/mole" value="26.9815"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <polyhedra name="solidEndCap" startphi="45" deltaphi="360" numsides="4" aunit="deg"  lunit="mm">
+         <zplane rmax="xyOuterBottomEndCap/2." rmin="xyInnerBottomEndCap/2."               z="-(zTopEndCap+zMiddleEndCap)/2.-zBottomEndCap"/>
+         <zplane rmax="xyOuterBottomEndCap/2." rmin="xyInnerBottomEndCap/2.-zBottomEndCap" z="-(zTopEndCap+zMiddleEndCap)/2."/>
+         <zplane rmax="xyOuterTopEndCap/2."    rmin="xyInnerBottomEndCap/2.-zBottomEndCap" z="-(zTopEndCap+zMiddleEndCap)/2."/>
+         <zplane rmax="xyOuterTopEndCap/2."    rmin="xyInnerTopEndCap/2."                  z="-(zTopEndCap+zMiddleEndCap)/2.+zMiddleEndCap"/>
+         <zplane rmax="xyOuterTopEndCap/2."    rmin="xyInnerTopEndCap/2."                  z="(zTopEndCap+zMiddleEndCap)/2"/>
+      </polyhedra>
+   </solids>
+
+   <structure>
+      <volume name="logicEndCap">
+         <materialref ref="matEndCap"/>
+         <solidref ref="solidEndCap"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="brown"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-132.75"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicEndCap"/>
+   </setup>
+</gdml>

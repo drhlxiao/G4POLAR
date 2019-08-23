@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyGrid"       value="6.08"/>
+      <constant name="zGrid"        value="3.0"/>
+      <constant name="xyInnerGrid1" value="5.75"/>
+      <constant name="xyInnerGrid2" value="5.1"/>
+   </define>
+
+   <materials>
+      <!-- Define Element Hydrogen(H) -->
+      <isotope name="H1" Z="1" N="1">
+         <atom unit="g/mole" value="1.00782503081372"/>
+      </isotope>
+      <isotope name="H2" Z="1" N="2">
+      	 <atom unit="g/mole" value="2.01410199966617"/>
+      </isotope>
+      <element name="Hydrogen">
+      	 <fraction n="0.999885" ref="H1"/>
+      	 <fraction n="0.000115" ref="H2"/>
+      </element>
+
+      <!-- Define Element Carbon(C) -->
+      <isotope name="C12" Z="6" N="12">
+         <atom unit="g/mole" value="12"/>
+      </isotope>
+      <isotope name="C13" Z="6" N="13">
+   	     <atom unit="g/mole" value="13.0034"/>
+      </isotope>
+      <element name="Carbon">
+   	     <fraction n="0.9893" ref="C12"/>
+   	     <fraction n="0.0107" ref="C13"/>
+      </element>
+
+      <!-- Define Element Nitrogen(N) -->
+      <isotope name="N14" Z="7" N="14">
+      	 <atom unit="g/mole" value="14.0031"/>
+      </isotope>
+      <isotope name="N15" Z="7" N="15">
+      	 <atom unit="g/mole" value="15.0001"/>
+      </isotope>
+      <element name="Nitrogen">
+      	 <fraction n="0.99632" ref="N14"/>
+      	 <fraction n="0.00368" ref="N15"/>
+      </element>
+
+      <!-- Define Element Oxygen(O) -->
+	  <isotope name="O16" Z="8" N="16">
+         <atom unit="g/mole" value="15.9949"/>
+      </isotope>
+      <isotope name="O17" Z="8" N="17">
+         <atom unit="g/mole" value="16.9991"/>
+      </isotope>
+      <isotope name="O18" Z="8" N="18">
+         <atom unit="g/mole" value="17.9992"/>
+      </isotope>
+      <element name="Oxygen">
+         <fraction n="0.99757" ref="O16"/>
+         <fraction n="0.00038" ref="O17"/>
+         <fraction n="0.00205" ref="O18"/>
+      </element>
+
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the Front Baffle ~~ Polyurethane -->
+      <material name="matFrontBaffle" state="solid">
+      	 <D unit="g/cm3" value="1.15"/>
+      	 <fraction n="0.2" ref="Hydrogen"/>
+         <fraction n="0.2" ref="Carbon"/>
+         <fraction n="0.2" ref="Nitrogen"/>
+         <fraction n="0.4" ref="Oxygen"/>
+      </material>
+   </materials>
+
+   <solids>
+      <!-- Define grids in Front Baffle -->
+      <polyhedra name="solidGridFrontBaffle" startphi="45" deltaphi="360" numsides="4" aunit="deg"  lunit="mm">
+         <zplane rmax="xyGrid/2." rmin="xyInnerGrid1/2." z="-zGrid/2."/>
+         <zplane rmax="xyGrid/2." rmin="xyInnerGrid2/2." z="zGrid/2."/>
+      </polyhedra>
+   </solids>
+
+   <structure>
+      <volume name="logicGridFrontBaffle">
+         <materialref ref="matFrontBaffle"/>
+         <solidref ref="solidGridFrontBaffle"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="grey"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="86.5"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicGridFrontBaffle"/>
+   </setup>
+</gdml>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyTopFEEBoard"      value="51."/>
+      <constant name="zTopFEEBoard"       value="1.7"/>
+      <constant name="xTopSubBoxFEEBoard" value="1."/>
+      <constant name="yTopSubBoxFEEBoard" value="30."/>
+
+      <constant name="xyMiddleFEEBoard"      value="52."/>
+      <constant name="zMiddleFEEBoard"       value="1.2"/>
+      <constant name="xMiddleSubBoxFEEBoard" value="1.5"/>
+      <constant name="yMiddleSubBoxFEEBoard" value="30."/>
+
+      <constant name="xyBottomFEEBoard"      value="52."/>
+      <constant name="zBottomFEEBoard"       value="1.5"/>
+      <constant name="xBottomSubBoxFEEBoard" value="4.5"/>
+      <constant name="yBottomSubBoxFEEBoard" value="12."/>
+   </define>
+   
+   <materials>
+      <!-- Define Element Hydrogen(H) -->
+      <isotope name="H1" Z="1" N="1">
+         <atom unit="g/mole" value="1.00782503081372"/>
+      </isotope>
+      <isotope name="H2" Z="1" N="2">
+         <atom unit="g/mole" value="2.01410199966617"/>
+      </isotope>
+      <element name="Hydrogen">
+         <fraction n="0.999885" ref="H1"/>
+         <fraction n="0.000115" ref="H2"/>
+      </element>
+
+      <!-- Define Element Carbon(C) -->
+      <isotope name="C12" Z="6" N="12">
+         <atom unit="g/mole" value="12"/>
+      </isotope>
+      <isotope name="C13" Z="6" N="13">
+             <atom unit="g/mole" value="13.0034"/>
+      </isotope>
+      <element name="Carbon">
+             <fraction n="0.9893" ref="C12"/>
+             <fraction n="0.0107" ref="C13"/>
+      </element>
+
+      <!-- Define Element Oxygen(O) -->
+          <isotope name="O16" Z="8" N="16">
+         <atom unit="g/mole" value="15.9949"/>
+      </isotope>
+      <isotope name="O17" Z="8" N="17">
+         <atom unit="g/mole" value="16.9991"/>
+      </isotope>
+      <isotope name="O18" Z="8" N="18">
+         <atom unit="g/mole" value="17.9992"/>
+      </isotope>
+      <element name="Oxygen">
+         <fraction n="0.99757" ref="O16"/>
+         <fraction n="0.00038" ref="O17"/>
+         <fraction n="0.00205" ref="O18"/>
+      </element>
+
+      <!-- Need to check the molecular formula -->
+      /<!-- Define material for the FEE Board ~~ Resin -->
+      <material name="matFEEBoard" state="solid">
+         <D unit="g/cm3" value="1.2"/>
+         <composite n="3" ref="Hydrogen"/>
+         <composite n="2" ref="Carbon"/>
+         <composite n="1" ref="Oxygen"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <box name="solidTopBoxFEEBoard" x="xyTopFEEBoard" y="xyTopFEEBoard" z="zTopFEEBoard" lunit="mm"/>
+      <box name="solidTopConeBoxFEEBoard" x="xTopSubBoxFEEBoard" y="yTopSubBoxFEEBoard" z="zTopFEEBoard" lunit="mm"/>
+      <subtraction name="solidTopSubFEEBoardTemp">
+         <first ref="solidTopBoxFEEBoard"/>
+         <second ref="solidTopConeBoxFEEBoard"/>
+         <position name="pos1FEEBoard" x="(xyTopFEEBoard-xTopSubBoxFEEBoard)/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidSubTopFEEBoard">
+         <first ref="solidTopSubFEEBoardTemp"/>
+         <second ref="solidTopConeBoxFEEBoard"/>
+         <position name="pos2FEEBoard" x="-(xyTopFEEBoard-xTopSubBoxFEEBoard)/2." unit="mm"/>
+      </subtraction>
+
+      <box name="solidMiddleBoxFEEBoard" x="xyMiddleFEEBoard" y="xyMiddleFEEBoard" z="zMiddleFEEBoard" lunit="mm"/>
+      <box name="solidMiddleConeBoxFEEBoard" x="xMiddleSubBoxFEEBoard" y="yMiddleSubBoxFEEBoard" z="zMiddleFEEBoard" lunit="mm"/>
+      <subtraction name="solidMiddleSubFEEBoardTemp">
+         <first ref="solidMiddleBoxFEEBoard"/>
+         <second ref="solidMiddleConeBoxFEEBoard"/>
+         <position name="pos3FEEBoard" x="(xyMiddleFEEBoard-xMiddleSubBoxFEEBoard)/2." unit="mm"/>
+       </subtraction>
+       <subtraction name="solidSubMiddleFEEBoard">
+           <first ref="solidMiddleSubFEEBoardTemp"/>
+           <second ref="solidMiddleConeBoxFEEBoard"/>
+           <position name="pos4FEEBoard" x="-(xyMiddleFEEBoard-xMiddleSubBoxFEEBoard)/2." unit="mm"/>
+       </subtraction>
+
+       <box name="solidBottomBoxFEEBoard" x="xyBottomFEEBoard" y="xyBottomFEEBoard" z="zBottomFEEBoard" lunit="mm"/>
+       <box name="solidBottomConeBoxFEEBoard" x="xBottomSubBoxFEEBoard" y="yBottomSubBoxFEEBoard" z="zBottomFEEBoard" lunit="mm"/>
+       <subtraction name="solidBottomSubFEEBoardTemp">
+           <first ref="solidBottomBoxFEEBoard"/>
+           <second ref="solidBottomConeBoxFEEBoard"/>
+           <position name="pos5FEEBoard" x="(xyBottomFEEBoard-xBottomSubBoxFEEBoard)/2." unit="mm"/>
+       </subtraction>
+       <subtraction name="solidSubBottomFEEBoard">
+           <first ref="solidBottomSubFEEBoardTemp"/>
+           <second ref="solidBottomConeBoxFEEBoard"/>
+           <position name="pos6FEEBoard" x="-(xyBottomFEEBoard-xBottomSubBoxFEEBoard)/2." unit="mm"/>
+       </subtraction>
+
+      <union name="solidUnionFEEBoardTemp">
+         <first ref="solidSubBottomFEEBoard"/>
+         <second ref="solidSubMiddleFEEBoard"/>
+         <position name="pos9FEEBoard" z="7.5+(zMiddleFEEBoard-zBottomFEEBoard)/2." unit="mm"/>
+      </union>
+      <union name="solidFEEBoard">
+         <first ref="solidUnionFEEBoardTemp"/>
+         <second ref="solidSubTopFEEBoard"/>
+         <position name="pos10FEEBoard" z="15.3+(zTopFEEBoard-zBottomFEEBoard)/2." unit="mm"/>
+      </union>
+   </solids>
+
+   <structure>
+      <volume name="logicFEEBoard">
+         <materialref ref="matFEEBoard"/>
+         <solidref ref="solidFEEBoard"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="green"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-128.75"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicFEEBoard"/>
+   </setup>
+</gdml>

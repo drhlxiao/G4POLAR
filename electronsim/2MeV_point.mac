@@ -1,0 +1,38 @@
+
+# reading Geometry from File
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+/polar/det/setVolumes detector
+
+#/polar/det/setVolumes spaceLab
+/run/initialize
+# reading Geometry from Fil
+
+/gps/particle  e-
+#/gps/ene/type Pow
+#/gps/ene/type Mono
+#/gps/ene/alpha -1.0000e+00
+#/gps/ene/min 1.0000e-02 MeV
+#/gps/ene/max 1.0000e+02 MeV
+#/gps/pos/type Plane
+#/gps/pos/shape Annulus
+#/gps/pos/centre 0.0000e+00 0.0000e+00 10.0000e+00  cm
+#/gps/pos/radius 20 cm
+#/gps/pos/rot1 -1.0000e+00  -0.0000e+00 -0.0000e+00
+#/gps/pos/rot2 -0.0000e+00  1.0000e+00 0.0000e+00
+#/gps/ang/rot1 -1.0000e+00  -0.0000e+00 -0.0000e+00
+#/gps/ang/rot2 0.0000e+00  -1.0000e+00 -0.0000e+00
+#/gps/ang/user_coor true
+#/gps/ang/type   cos 
+
+#/gps/particle e-
+/gps/energy 2 MeV
+/gps/position 0.2 0.2 20 cm
+/gps/direction 0 0 -1
+#/gps/ang/type iso
+##/gps/ang/mintheta 0.0000e+00 degree
+#/gps/ang/maxtheta 9.0000e+01 degree
+
+#
+
+/run/beamOn 20000

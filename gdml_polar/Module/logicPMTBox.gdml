@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyTopBoxPMTBox"    value="51.3"/>
+      <constant name="zTopBoxPMTBox"     value="13.8"/>
+      <constant name="xyBottomBoxPMTBox" value="49.2"/>
+      <constant name="zBottomBoxPMTBox"  value="1.2"/>
+      <constant name="rTubePMTBox"       value="2.6"/>
+      <constant name="zTubePMTBox"       value="5.5"/>
+
+      <constant name="xyPMTGas" value="49."/>
+      <constant name="zPMTGas"  value="13.8"/>
+
+      <constant name="xyPMTDynode" value="49."/>
+      <constant name="zPMTDynode"  value="0.3"/>
+
+      <variable name="i" value="0"/>
+   </define>
+   
+   <materials>
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the PMT Box ~~ Al -->
+      <material name="matPMTBox" Z="13" state="solid">
+         <D unit="g/cm3" value="2.78"/>
+         <atom unit="g/mole" value="26.981539"/>
+      </material>
+
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the PMT Gas ~~ Vacuum -->
+      <material name="matPMTGas" Z="1" state="gas">
+         <D unit="g/cm3" value="1e-25"/>
+         <atom unit="g/mole" value="1.00794"/>
+      </material>
+
+      <!-- Define Element Antimony(Sb) -->
+      <element name="Antimony" formula="Sb" Z="51">
+         <atom unit="g/mole" value="121.8"/>
+      </element>
+
+      <!-- Define Element Cesium(Cs) -->
+      <element name="Cesium" formula="Cs" Z="55">
+         <atom unit="g/mole" value="132.9054"/>
+      </element>
+
+      <!-- Need to define more detailly -->
+      <!-- Define material for the PMT Dynode -->
+      <material name="matPMTDynode" state="solid">
+         <D unit="g/cm3" value="2.3"/>
+         <fraction n="0.1" ref="Antimony"/>
+         <fraction n="0.9" ref="Cesium"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <box name="solidTopBoxPMTBox" x="xyTopBoxPMTBox" y="xyTopBoxPMTBox" z="zTopBoxPMTBox" lunit="mm"/>
+      <box name="solidBottomBoxPMTBox" x="xyBottomBoxPMTBox" y="xyBottomBoxPMTBox" z="zBottomBoxPMTBox" lunit="mm"/>
+      <tube name="solidTubePMTBox" rmin="0" rmax="rTubePMTBox" z="zTubePMTBox" startphi="0" deltaphi="360" aunit="deg" lunit="mm"/>
+      <union name="solidUnion1PMTBox">
+         <first ref="solidTopBoxPMTBox"/>
+         <second ref="solidBottomBoxPMTBox"/>
+         <position name="pos1PMTBox" z="-(zTopBoxPMTBox+zBottomBoxPMTBox)/2." unit="mm"/>
+      </union>
+      <union name="solidPMTBox">
+         <first ref="solidUnion1PMTBox"/>
+         <second ref="solidTubePMTBox"/>
+         <position name="pos2PMTBox" z="-(zTopBoxPMTBox+zBottomBoxPMTBox+zTubePMTBox)/2." unit="mm"/>
+      </union>
+
+      <box name="solidPMTGas" x="xyPMTGas" y="xyPMTGas" z="zPMTGas" lunit="mm"/>
+
+      <box name="solidPMTDynode" x="xyPMTDynode" y="xyPMTDynode" z="zPMTDynode" lunit="mm"/>
+   </solids>
+
+   <structure>
+      <volume name="logicPMTDynode">
+         <materialref ref="matPMTDynode"/>
+         <solidref ref="solidPMTDynode"/>
+      </volume>
+
+      <volume name="logicPMTGas">
+         <materialref ref="matPMTGas"/>
+         <solidref ref="solidPMTGas"/>
+         <loop for="i" from="0" to="12" step="1">
+            <physvol>
+               <volumeref ref="logicPMTDynode"/>
+               <position name="posiPMTDynode" z="6.75-i" unit="mm"/>
+            </physvol>
+         </loop>
+      </volume>
+
+      <volume name="logicPMTBox">
+         <materialref ref="matPMTBox"/>
+         <solidref ref="solidPMTBox"/>
+         <physvol>
+            <volumeref ref="logicPMTGas"/>
+         </physvol>
+      <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+      <auxiliary auxtype="isWireframe" auxvalue="no"/>
+      <auxiliary auxtype="color"       auxvalue="white"/>
+      <auxiliary auxtype="isSensitive" auxvalue="no"/>
+      <auxiliary auxtype="zPosition"   auxvalue="-96.9"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicPMTBox"/>
+   </setup>
+</gdml>

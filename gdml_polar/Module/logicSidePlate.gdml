@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xTopBoxSidePlate" value="2.5"/>
+      <constant name="yTopBoxSidePlate" value="30."/>
+      <constant name="zTopBoxSidePlate" value="19.5"/>
+
+      <constant name="xMiddleBoxSidePlate" value="4.5"/>
+      <constant name="yMiddleBoxSidePlate" value="30."/>
+      <constant name="zMiddleBoxSidePlate" value="2.0"/>
+       
+      <constant name="xBottomBoxSidePlate" value="4.5"/>
+      <constant name="yBottomBoxSidePlate" value="11.8"/>
+      <constant name="zBottomBoxSidePlate" value="1.5"/>
+             
+      <constant name="x1TrapSidePlate" value="0.6"/>
+      <constant name="x2TrapSidePlate" value="4."/>
+      <constant name="yTrapSidePlate"  value="30."/>
+      <constant name="zTrapSidePlate"  value="3."/>
+
+      <constant name="xSubBoxSidePlate"  value="1."/>
+      <constant name="ySubBoxSidePlate"  value="30."/>
+      <constant name="z1SubBoxSidePlate" value="1.7"/>
+      <constant name="z2SubBoxSidePlate" value="1.2"/>
+      
+      <constant name="z1PolyconeSidePlate" value="16.75"/>
+      <constant name="z2PolyconeSidePlate" value="17.5"/>
+      <constant name="z3PolyconeSidePlate" value="23.5"/>
+      <constant name="r1PolyconeSidePlate" value="1.25"/>
+      <constant name="r2PolyconeSidePlate" value="2."/>
+   </define>
+   
+   <materials>
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the Side Plate ~~ G4_Al -->
+      <material name="matSidePlate" Z="13" state="solid">
+         <D unit="g/cm3" value="2.699"/>
+         <atom unit="g/mole" value="26.9815"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <box name="solidTopBoxSidePlate" x="xTopBoxSidePlate" y="yTopBoxSidePlate" z="zTopBoxSidePlate" lunit="mm"/>
+      <box name="solidMiddleBoxSidePlate" x="xMiddleBoxSidePlate" y="yMiddleBoxSidePlate" z="zMiddleBoxSidePlate" lunit="mm"/>
+      <box name="solidBottomBoxSidePlate" x="xBottomBoxSidePlate" y="yBottomBoxSidePlate" z="zBottomBoxSidePlate" lunit="mm"/>
+      <trap name="solidTrapSidePlate" z="zTrapSidePlate" theta="0" phi="0" y1="yTrapSidePlate" x1="x2TrapSidePlate" x2="x2TrapSidePlate" alpha1="0" y2="yTrapSidePlate" x3="x1TrapSidePlate" x4="x1TrapSidePlate" alpha2="0" aunit="deg" lunit="mm"/>
+      <union name="solidUnion1SidePlate">
+         <first ref="solidTopBoxSidePlate"/>
+         <second ref="solidTrapSidePlate"/>
+         <position name="pos1SidePlate" x="xTopBoxSidePlate/2." z="-zTopBoxSidePlate/2.+zTrapSidePlate/2." unit="mm"/>
+      </union>
+      <union name="solidUnion2SidePlate">
+         <first ref="solidUnion1SidePlate"/>
+         <second ref="solidMiddleBoxSidePlate"/>
+         <position name="pos2SidePlate" x="(xMiddleBoxSidePlate-xTopBoxSidePlate)/2." z="-(zTopBoxSidePlate+zMiddleBoxSidePlate)/2." unit="mm"/>
+      </union>
+      <union name="solidUnion3SidePlate">
+         <first ref="solidUnion2SidePlate"/>
+         <second ref="solidBottomBoxSidePlate"/>
+         <position name="pos3SidePlate" x="(xBottomBoxSidePlate-xTopBoxSidePlate)/2." z="-(zTopBoxSidePlate+zBottomBoxSidePlate)/2.-zMiddleBoxSidePlate" unit="mm"/>
+      </union>
+      
+      <box name="solidSubBox1SidePlate" x="xSubBoxSidePlate" y="ySubBoxSidePlate" z="z1SubBoxSidePlate" lunit="mm"/>
+      <box name="solidSubBox2SidePlate" x="xSubBoxSidePlate" y="ySubBoxSidePlate" z="z2SubBoxSidePlate" lunit="mm"/>
+      <subtraction name="solidSubtractionSidePlate">
+         <first ref="solidUnion3SidePlate"/>
+         <second ref="solidSubBox1SidePlate"/>
+         <position name="pos4SidePlate" x="(xTopBoxSidePlate-xSubBoxSidePlate)/2." z="zTopBoxSidePlate/2.-6.-z1SubBoxSidePlate/2." unit="mm"/>
+      </subtraction>
+      <subtraction name="solidSingleSidePlate">
+         <first ref="solidSubtractionSidePlate"/>
+         <second ref="solidSubBox2SidePlate"/>
+         <position name="pos5SidePlate" x="(xTopBoxSidePlate-xSubBoxSidePlate)/2." z="-zTopBoxSidePlate/2.+4.+z2SubBoxSidePlate/2." unit="mm"/>
+      </subtraction>
+
+      <polycone name="solidPolyconeSidePlate" startphi="0" deltaphi="360" aunit="deg"  lunit="mm">
+         <zplane rmax="r2PolyconeSidePlate" rmin="0" z="-z3PolyconeSidePlate"/>
+         <zplane rmax="r2PolyconeSidePlate" rmin="0" z="-z2PolyconeSidePlate"/>
+         <zplane rmax="r1PolyconeSidePlate" rmin="0" z="-z1PolyconeSidePlate"/>
+         <zplane rmax="r1PolyconeSidePlate" rmin="0" z="z1PolyconeSidePlate"/>
+         <zplane rmax="r2PolyconeSidePlate" rmin="0" z="z2PolyconeSidePlate"/>
+         <zplane rmax="r2PolyconeSidePlate" rmin="0" z="z3PolyconeSidePlate"/>
+      </polycone>
+      <union name="solidUnion4SidePlate">
+         <first ref="solidPolyconeSidePlate"/>
+         <second ref="solidSingleSidePlate"/>
+         <position name="pos6SidePlate" x="10.5-zTopBoxSidePlate/2." z="z3PolyconeSidePlate+xTopBoxSidePlate/2." unit="mm"/>
+         <rotation name="rot1SidePlate" y="90." unit="deg"/>
+      </union>
+      <union name="solidSidePlate">
+         <first ref="solidUnion4SidePlate"/>
+         <second ref="solidSingleSidePlate"/>
+         <position name="pos7SidePlate" x="10.5-zTopBoxSidePlate/2." z="-z3PolyconeSidePlate-xTopBoxSidePlate/2." unit="mm"/>
+         <rotation name="rot2SidePlate" y="-90." z="180." unit="deg"/>
+      </union>
+   </solids>
+
+   <structure>
+      <volume name="logicSidePlate">
+         <materialref ref="matSidePlate"/>
+         <solidref ref="solidSidePlate"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="pink"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-117"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicSidePlate"/>
+   </setup>
+</gdml>

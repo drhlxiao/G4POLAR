@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="rScrew" value="1.5"/>
+      <constant name="zScrew" value="8.935"/>
+   </define>
+
+   <materials>   
+      <!-- Define Element Chromium(Cr) -->
+      <element name="Chromium" formula="Cr" Z="24">
+          <atom unit="g/mole" value="51.996"/>
+      </element>
+
+       <!-- Define Element Manganese(Mn) -->
+       <element name="Manganese" formula="Mn" Z="25">
+           <atom unit="g/mole" value="54.94"/>
+       </element>
+
+       <!-- Define Element Iron(Fe) -->
+       <element name="Iron" formula="Fe" Z="26">
+           <atom unit="g/mole" value="55.845"/>
+       </element>
+
+       <!-- Define Element Nickel(Ni) -->
+       <element name="Nickel" formula="Ni" Z="28">
+           <atom unit="g/mole" value="58.7"/>
+       </element>
+
+      <!-- Need to define more detailly -->
+      <!-- Define material for the Screw ~~ Stainless steel -->
+      <material name="matScrew" state="solid">
+         <D unit="g/cm3" value="7.94"/>
+         <fraction n="0.18" ref="Chromium"/>
+         <fraction n="0.01" ref="Manganese"/>
+         <fraction n="0.71" ref="Iron"/>
+         <fraction n="0.10" ref="Nickel"/>
+      </material>
+   </materials>
+ 
+   <solids>
+      <tube name="solidScrew" rmin="0." rmax="rScrew" z="zScrew" startphi="0." deltaphi="360." aunit="deg" lunit="mm"/>
+   </solids>
+
+   <structure>
+      <volume name="logicScrew">
+         <materialref ref="matScrew"/>
+         <solidref ref="solidScrew"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="white"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="92.5325"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicScrew"/>
+   </setup>
+</gdml>

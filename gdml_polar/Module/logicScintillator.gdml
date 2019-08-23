@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyScintBox" value="5.8"/>
+      <constant name="zScintBox"  value="166."/>
+      <constant name="xyScintTrd" value="5."/>
+      <constant name="zScintTrd"  value="5."/>
+   </define>
+
+   <materials>
+      <!-- Define Element Hydrogen(H) -->
+      <isotope name="H1" Z="1" N="1">
+         <atom unit="g/mole" value="1.00782503081372"/>
+      </isotope>
+      <isotope name="H2" Z="1" N="2">
+      	 <atom unit="g/mole" value="2.01410199966617"/>
+      </isotope>
+      <element name="Hydrogen">
+      	 <fraction n="0.999885" ref="H1"/>
+      	 <fraction n="0.000115" ref="H2"/>
+      </element>
+
+      <!-- Define Element Carbon(C) -->
+      <isotope name="C12" Z="6" N="12">
+         <atom unit="g/mole" value="12"/>
+      </isotope>
+      <isotope name="C13" Z="6" N="13">
+   	     <atom unit="g/mole" value="13.0034"/>
+      </isotope>
+      <element name="Carbon">
+   	     <fraction n="0.9893" ref="C12"/>
+   	     <fraction n="0.0107" ref="C13"/>
+      </element>
+
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the plastic Scintillator EJ248M ~~ Polystyrene -->
+	  <!--http://www.eljentechnology.com/products/plastic-scintillators/ej-290 
+		   Hualin Xiao, 2017
+		   -->
+      <material name="matScintillator" state="solid">
+      	 <D unit="g/cm3" value="1.023"/>
+      	 <composite n="10" ref="Hydrogen"/>
+         <composite n="9" ref="Carbon"/>
+      </material>
+   </materials>
+
+   <solids>
+      <polyhedra name="solidScintillator" startphi="45" deltaphi="360" numsides="4" aunit="deg"  lunit="mm">
+         <zplane rmax="xyScintTrd/2." rmin="0" z="-(zScintBox/2.+zScintTrd)"/>
+         <zplane rmax="xyScintBox/2." rmin="0" z="-zScintBox/2."/>
+         <zplane rmax="xyScintBox/2." rmin="0" z="zScintBox/2."/>
+         <zplane rmax="xyScintTrd/2." rmin="0" z="zScintBox/2.+zScintTrd"/>
+      </polyhedra>
+   </solids>
+   
+   <structure>
+      <volume name="logicScintillator">
+         <materialref ref="matScintillator"/>
+         <solidref ref="solidScintillator"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="blue"/>
+         <auxiliary auxtype="isSensitive" auxvalue="yes"/>
+         <auxiliary auxtype="zPosition"   auxvalue="0"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicScintillator"/>
+   </setup>
+</gdml>

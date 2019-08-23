@@ -1,0 +1,34 @@
+
+# reading Geometry from File
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+/polar/det/setVolumes detector
+#/polar/Analysis/setOutputFileName  analysis_test.root
+/polar/Analysis/setThreshold  50 keV
+/polar/Analysis/setkB  0.143
+/polar/Analysis/setAnalysisLevel  0
+/polar/Analysis/setQuickLook 2
+/polar/Analysis/setCalibrationFileName  data/response.root
+/polar/Analysis/setPreC  1
+/polar/Analysis/setPreS  0
+
+
+
+#/polar/det/setVolumes spaceLab
+/run/initialize
+#/polar/readParticleFrom  proton.root
+
+/gps/pos/type Surface
+/gps/pos/shape Sphere
+/gps/pos/centre 0 0 0 mm
+/gps/pos/radius 300 mm
+/gps/ang/type cos
+/gps/ene/type Exp
+/gps/ene/min 0.05 MeV
+/gps/ene/max 10. MeV
+/gps/ene/alpha -2.3
+#exp(-e/e0)
+# events: 6.24062e8 in 1000s, 
+#rate: 624062 between 100 keV-10 MeV
+#4pi solid angle
+/run/beamOn 624062

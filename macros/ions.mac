@@ -1,0 +1,24 @@
+
+# reading Geometry from File
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+/polar/det/setVolumes detector
+
+#/polar/det/setVolumes spaceLab
+/run/initialize
+/polar/Analysis/setThreshold  5 keV
+/polar/Analysis/setkB  0.143
+/polar/Analysis/setAnalysisLevel  4
+/polar/Analysis/setQuickLook 2
+
+/polar/Analysis/setCalibrationFileName  data/response.root
+
+# reading Geometry from Fil
+/gps/particle ion
+#/gps/ion 11 22
+/gps/ion 56 133
+/gps/energy 0 keV
+/gps/ang/type iso
+/gps/position 0. 0. 0. cm
+
+/run/beamOn 100000

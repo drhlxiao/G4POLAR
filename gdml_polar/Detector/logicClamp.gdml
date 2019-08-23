@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xBoxClamp"  value="80."/>
+      <constant name="yBox1Clamp" value="11."/>
+      <constant name="yBox2Clamp" value="9."/>
+      <constant name="zBox1Clamp" value="5."/>
+      <constant name="zBox2Clamp" value="2."/>
+   </define>
+   
+   <materials>
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the Clamp ~~ G4_Al -->
+      <material name="matClamp" Z="13" state="solid">
+         <D unit="g/cm3" value="2.699"/>
+         <atom unit="g/mole" value="26.9815"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <box name="solidBox1Clamp" x="xBoxClamp" y="yBox1Clamp" z="zBox1Clamp" lunit="mm"/>
+      <box name="solidBox2Clamp" x="xBoxClamp" y="yBox2Clamp" z="zBox2Clamp" lunit="mm"/>
+      <union name="solidSingleClamp">
+         <first  ref="solidBox1Clamp"/>
+         <second ref="solidBox2Clamp"/>
+         <position name="pos1Clamp" y="-(yBox1Clamp+yBox2Clamp)/2." z="(zBox1Clamp-zBox2Clamp)/2." unit="mm"/>
+      </union>
+
+      <union name="solidDoubleClamp">
+         <first  ref="solidSingleClamp"/>
+         <second ref="solidSingleClamp"/>
+         <position name="p2Clamp" x="xBoxClamp+76." unit="mm"/>
+      </union>
+
+      <union name="solidClampTemp1">
+         <first  ref="solidDoubleClamp"/>
+         <second ref="solidDoubleClamp"/>
+         <position name="p3Clamp" x="236.5" y="80.5" unit="mm"/>
+         <rotation name="rot1Clamp" z="90." unit="deg"/>
+      </union>
+      <union name="solidClampTemp2">
+         <first  ref="solidClampTemp1"/>
+         <second ref="solidDoubleClamp"/>
+         <position name="p4Clamp" x="156." y="317." unit="mm"/>
+         <rotation name="rot2Clamp" z="180." unit="deg"/>
+      </union>
+      <union name="solidClamp">
+         <first  ref="solidClampTemp2"/>
+         <second ref="solidDoubleClamp"/>
+         <position name="p5Clamp" x="-80.5" y="236.5" unit="mm"/>
+         <rotation name="rot3Clamp" z="270." unit="deg"/>
+      </union>
+   </solids>
+
+   <structure>
+      <volume name="logicClamp">
+         <materialref ref="matClamp"/>
+         <solidref ref="solidClamp"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="orange"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-75.1"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicClamp"/>
+   </setup>
+</gdml>

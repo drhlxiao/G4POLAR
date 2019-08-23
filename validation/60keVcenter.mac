@@ -1,0 +1,47 @@
+
+# reading Geometry from File
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+/polar/det/setVolumes detector
+
+
+
+#/polar/Analysis/setOutputFileName  analysis_test.root
+#set output file
+/polar/Analysis/setThreshold  5 keV
+/polar/Analysis/setMCThreshold  1500 keV
+
+# if all hits have energy below the threshold, the event will not be recorded
+/polar/Analysis/setkB  0.143
+#kb constance
+/polar/Analysis/setAnalysisLevel  4
+# 0: only simulate quenching and crosstalk collection, write in t2polar-> pm2
+# >=1: to simulate energy resolution smearing, write in t2polar->pm3
+# >=2: to simulate crosstalk and non-uniformity wirte in t2polar->adc
+# >=3: to simulate trigger, gives tout1,tout2, tmth, accepted, 
+# 4: to quick look data
+
+#/polar/Analysis/setQuickLook 2
+#enable quick look analysis
+/polar/Analysis/setCalibrationFileName  realisticSim/response.root
+#if it is set, use calibration file, which contains response matrix and threshold information
+
+
+#/polar/det/setVolumes spaceLab
+/run/initialize
+
+#/polar/readParticleFrom  proton.root
+#particle information read from root
+#/polar/setNa22Position proton.root
+#generate na22 events
+
+#the third option, to use GPS to generate particles
+
+/gps/particle gamma 
+/gps/energy 60 keV
+/gps/position 0.3 0.3 10 cm
+/gps/direction 0 0  -1
+/gps/number 1
+/gps/polarization 1 0 0
+
+/run/beamOn 25000

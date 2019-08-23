@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyCfSocketTop"    value="52.5"/>
+      <constant name="zCfSocketTop"     value="178.0"/>
+      <constant name="xyCfSocketBottom" value="55.5"/>
+      <constant name="zCfSocketBottom"  value="50.0"/>
+      <constant name="thickCfSocket"    value="-1.0"/>
+      <constant name="rConeCfSocket"    value="1.5"/>
+      <constant name="zConeCfSocket"    value="1."/>
+   </define>
+
+   <materials>
+      <!-- Define Element Hydrogen(H) -->
+      <isotope name="H1" Z="1" N="1">
+         <atom unit="g/mole" value="1.00782503081372"/>
+      </isotope>
+      <isotope name="H2" Z="1" N="2">
+      	 <atom unit="g/mole" value="2.01410199966617"/>
+      </isotope>
+      <element name="Hydrogen">
+      	 <fraction n="0.999885" ref="H1"/>
+      	 <fraction n="0.000115" ref="H2"/>
+      </element>
+
+      <!-- Define Element Carbon(C) -->
+      <isotope name="C12" Z="6" N="12">
+         <atom unit="g/mole" value="12"/>
+      </isotope>
+      <isotope name="C13" Z="6" N="13">
+   	     <atom unit="g/mole" value="13.0034"/>
+      </isotope>
+      <element name="Carbon">
+   	     <fraction n="0.9893" ref="C12"/>
+   	     <fraction n="0.0107" ref="C13"/>
+      </element>
+
+      <!-- Define Element Nitrogen(N) -->
+      <isotope name="N14" Z="7" N="14">
+      	 <atom unit="g/mole" value="14.0031"/>
+      </isotope>
+      <isotope name="N15" Z="7" N="15">
+      	 <atom unit="g/mole" value="15.0001"/>
+      </isotope>
+      <element name="Nitrogen">
+      	 <fraction n="0.99632" ref="N14"/>
+      	 <fraction n="0.00368" ref="N15"/>
+      </element>
+
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for the Carbon fiber Socket ~~ Polyacrylonitrile -->
+      <material name="matCfSocket" state="solid">
+      	   <D unit="g/cm3" value="1.6"/>
+      	   <composite n="3" ref="Hydrogen"/>
+      	   <composite n="3" ref="Carbon"/>
+      	   <composite n="1" ref="Nitrogen"/>
+      </material>
+   </materials>
+
+   <solids>
+      <polyhedra name="solidFullCfSocket" startphi="45" deltaphi="360" numsides="4" aunit="deg" lunit="mm">
+         <zplane rmax="xyCfSocketBottom/2." rmin="xyCfSocketBottom/2.+thickCfSocket" z="0."/>
+         <zplane rmax="xyCfSocketBottom/2." rmin="xyCfSocketBottom/2.+thickCfSocket" z="zCfSocketBottom+thickCfSocket"/>
+	 <zplane rmax="xyCfSocketBottom/2." rmin="xyCfSocketTop/2.+thickCfSocket"    z="zCfSocketBottom+thickCfSocket"/>
+      	 <zplane rmax="xyCfSocketBottom/2." rmin="xyCfSocketTop/2.+thickCfSocket"    z="zCfSocketBottom"/>
+      	 <zplane rmax="xyCfSocketTop/2."    rmin="xyCfSocketTop/2.+thickCfSocket"    z="zCfSocketBottom"/>
+      	 <zplane rmax="xyCfSocketTop/2."    rmin="xyCfSocketTop/2.+thickCfSocket"    z="zCfSocketBottom+zCfSocketTop+thickCfSocket"/>
+      	 <zplane rmax="xyCfSocketTop/2."    rmin="0."                                z="zCfSocketBottom+zCfSocketTop+thickCfSocket"/>
+      	 <zplane rmax="xyCfSocketTop/2."    rmin="0."                                z="zCfSocketBottom+zCfSocketTop"/>
+      </polyhedra>
+
+      <tube name="solidConeCfSocket" rmin="0." rmax="rConeCfSocket" z="zConeCfSocket" startphi="0." deltaphi="360." aunit="deg" lunit="mm"/>
+
+      <subtraction name="solidCfSocket">
+         <first  ref="solidFullCfSocket"/>
+         <second ref="solidConeCfSocket"/>
+         <position name="pos1CfSocket" z="zCfSocketBottom+zCfSocketTop-zConeCfSocket/2." unit="mm"/>
+      </subtraction>
+   </solids>
+
+   <structure>
+      <volume name="logicCfSocket">
+         <materialref ref="matCfSocket"/>
+         <solidref ref="solidCfSocket"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="yes"/>
+         <auxiliary auxtype="color"       auxvalue="red"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-134"/>         
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicCfSocket"/>
+   </setup>
+</gdml>

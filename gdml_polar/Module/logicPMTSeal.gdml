@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/gdml.xsd">
+
+   <define>
+      <constant name="xyInnerPMTSeal" value="44."/>
+      <constant name="xyOuterPMTSeal" value="53."/>
+      <constant name="zPMTSeal"       value="2."/>      
+   </define>
+   
+   <materials>
+      <!-- Define Element Carbon(C) -->
+      <isotope name="C12" Z="6" N="12">
+         <atom unit="g/mole" value="12"/>
+      </isotope>
+      <isotope name="C13" Z="6" N="13">
+   	   <atom unit="g/mole" value="13.0034"/>
+      </isotope>
+      <element name="Carbon">
+   	   <fraction n="0.9893" ref="C12"/>
+   	   <fraction n="0.0107" ref="C13"/>
+      </element>
+
+      <!-- Need to check the molecular formula -->
+      <!-- Define material for PMT Seal ~~ rubber -->
+      <material name="matPMTSeal" state="solid">
+         <D unit="g/cm3" value="3.0"/>
+         <fraction n="1.0" ref="Carbon"/>
+      </material>
+   </materials>
+   
+   <solids>
+      <polyhedra name="solidPMTSeal" startphi="45" deltaphi="360" numsides="4" aunit="deg"  lunit="mm">
+         <zplane rmax="xyOuterPMTSeal/2." rmin="xyInnerPMTSeal/2." z="-zPMTSeal/2."/>
+         <zplane rmax="xyOuterPMTSeal/2." rmin="xyInnerPMTSeal/2." z="zPMTSeal/2."/>
+      </polyhedra>
+   </solids>
+
+   <structure>
+      <volume name="logicPMTSeal">
+         <materialref ref="matPMTSeal"/>
+         <solidref ref="solidPMTSeal"/>
+         <auxiliary auxtype="isVisible"   auxvalue="yes"/>
+         <auxiliary auxtype="isWireframe" auxvalue="no"/>
+         <auxiliary auxtype="color"       auxvalue="lightBlue"/>
+         <auxiliary auxtype="isSensitive" auxvalue="no"/>
+         <auxiliary auxtype="zPosition"   auxvalue="-130.5"/>  
+      </volume>
+   </structure>
+
+   <setup name="Default" version="1.0">
+      <world ref="logicPMTSeal"/>
+   </setup>
+</gdml>
