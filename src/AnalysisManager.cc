@@ -476,7 +476,7 @@ void AnalysisManager::FillData(G4double total[25][64], G4double  vis[25][64], G4
 			} 
 		}
 		tp->mhits[i]=nn;
-		hmrate[i]->Fill(i+0.5);
+		hmrate->Fill(i+0.5);
 
 	}
 
