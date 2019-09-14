@@ -1,7 +1,7 @@
-/opt/geant4/g4work/g4POLAR_v2019_08_polarS/CMakeFiles/install/strip.dir
-/opt/geant4/g4work/g4POLAR_v2019_08_polarS/CMakeFiles/edit_cache.dir
-/opt/geant4/g4work/g4POLAR_v2019_08_polarS/CMakeFiles/g4POLAR.dir
-/opt/geant4/g4work/g4POLAR_v2019_08_polarS/CMakeFiles/list_install_components.dir
-/opt/geant4/g4work/g4POLAR_v2019_08_polarS/CMakeFiles/install/local.dir
-/opt/geant4/g4work/g4POLAR_v2019_08_polarS/CMakeFiles/rebuild_cache.dir
-/opt/geant4/g4work/g4POLAR_v2019_08_polarS/CMakeFiles/install.dir
+/opt/geant4/g4work/Chess2019/CMakeFiles/install/strip.dir
+/opt/geant4/g4work/Chess2019/CMakeFiles/edit_cache.dir
+/opt/geant4/g4work/Chess2019/CMakeFiles/g4POLAR.dir
+/opt/geant4/g4work/Chess2019/CMakeFiles/list_install_components.dir
+/opt/geant4/g4work/Chess2019/CMakeFiles/install/local.dir
+/opt/geant4/g4work/Chess2019/CMakeFiles/rebuild_cache.dir
+/opt/geant4/g4work/Chess2019/CMakeFiles/install.dir

@@ -82,6 +82,7 @@ AnalysisManager::AnalysisManager()
 	fStoreSingleBarEvent=1;
 	fAnalysisMessenger=new AnalysisMessenger(this);
 	detRes=new DetResponse();
+
 	h2hit=new TH2F("h2hit","h2hit;column;row",40,0,40,40,0,40);
 	SetPolarMapBinLabels(h2hit);
 
@@ -93,7 +94,7 @@ AnalysisManager::AnalysisManager()
 	SetPolarMapBinLabels(h2trig_prescaled);
 	//h2na22=new TH2F("h2na22","h2na22 coincidence hit map;column;row",40,0,40,40,0,40);
 
-	h1xi=new TH1F("h1xi","Azimuthal Angle; Azimuthal Angle (degree);Counts",40,0,360);
+	h1xi=new TH1F("h1xi","Azimuthal Angle; Azimuthal Angle (degree) without realistic simulation;Counts",40,0,360);
 	h1xi2=new TH1F("h1xi2",
 			"Azimuthal Angle using smeared energy and non-uniform threshold; Azimuthal Angle (degree);Counts",40,0,360);
 
@@ -329,15 +330,14 @@ void AnalysisManager::EndOfEventAction(const G4Event *event)
 	FillData(fTotalEdepSum, fVisibleEdepSum, fCollectedEdepSum); 
 	if(tp->nhits<1)return;
 	h1Esum->Fill(esum);
-
 	if(fRealSim>=1)
 	{
 		detRes->SmearEnergy(tp->pm, tp->pm3); 
-		//detRes->SimCrosstalkAndNonuniformity(tp->pm3, tp->adc); 
 		detRes->SimTrigger(tp->pm3,fPresSingle, fPresCosmic, tp);
 	}
 	tp->FillPolarization(fModulationCurveThreshold/keV);
 	if(tp->xiok[0])h1xi->Fill(tp->xideg[0]);
+
 	if(tp->xiok[1])h1xi2->Fill(tp->xideg[1]);
 	if(fRealSim>=1)tp->FillTriggerMap(h2trig, h2trig_prescaled);
 	fTFile->cd();

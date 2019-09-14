@@ -86,7 +86,7 @@ void GRBGenerator::Init()
 	double int1=f1->Integral(fluxEmin/keV, fluxEmax/keV);
 
 	ss<<"Flux set (ph/cm2*s):"<<flux<<G4endl;
-	ss<<"Flux for the energy range(keV): "<<fluxEmin/keV<<" - "<<fluxEmax/keV<<G4endl;
+	ss<<"Flux of the given the energy range(keV): "<<fluxEmin/keV<<" - "<<fluxEmax/keV<<G4endl;
 	if(flux>0)
 	{
 		total_events=(G4int)(int0*flux *PI*(CircRad/cm)*(CircRad/cm) /int1);

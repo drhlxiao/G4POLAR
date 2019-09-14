@@ -32,6 +32,7 @@
 #include "G4RunManager.hh"
 #include "PrimaryGeneratorMessenger.hh"
 #include "GRBGenerator.hh"
+#include "SolarFlareGenerator.hh"
 
 PrimaryGeneratorAction::PrimaryGeneratorAction():
 hasPositron(false),    gunType("gps"),fTree(NULL),fFile(NULL),nEntries(0),iEntry(0),nPositrons(0)
@@ -42,6 +43,8 @@ hasPositron(false),    gunType("gps"),fTree(NULL),fFile(NULL),nEntries(0),iEntry
 
 	gunGRB=NULL;
 	gunGRB=new GRBGenerator();
+
+	gunSolarFlare=new SolarFlareGenerator();
     primMessenger=new PrimaryGeneratorMessenger(this);
     //particle source
     G4int n_particle = 1;
@@ -65,6 +68,8 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
     delete fParticleSource;
     delete fParticleGun;
+	delete gunGRB;
+	delete gunSolarFlare;
     if(bkg)delete bkg;
     if(ts)delete ts;
 }
@@ -72,6 +77,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) 
 {
+
     if(gunType=="root")
     {
         if(!InitFile())
@@ -96,6 +102,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	{
         GenerateGRB(anEvent);
 	}
+	else if(gunType=="SolarFlare")
+	{
+        GenerateSolarFlareEvent(anEvent);
+	}
+
     else if(gunType=="two511")
     {
         GenerateATwo511Event(anEvent);
@@ -170,12 +181,20 @@ void PrimaryGeneratorAction::GenerateGRB(G4Event *anEvent)
 	{
 		G4cout<<" GRB particle gun is not initialized"<<G4endl;
 	}
-
 	gunGRB->GeneratePrimaryVertex(anEvent, fParticleGun);
-
-
-
 }
+void PrimaryGeneratorAction::GenerateSolarFlareEvent(G4Event *anEvent)
+{
+
+	if(!gunSolarFlare)
+	{
+		G4cout<<" GRB particle gun is not initialized"<<G4endl;
+	}
+	gunSolarFlare->GeneratePrimaryVertex(anEvent, fParticleGun);
+}
+
+
+
 void PrimaryGeneratorAction::GenerateATwo511Event(G4Event *anEvent)
 {
 
