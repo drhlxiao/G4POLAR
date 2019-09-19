@@ -15,7 +15,7 @@ const double PI=3.1415926;
 
 Double_t SolarFlareSpectrum(Double_t *x,Double_t *par){
 
-	Double_t p0=par[0]/TMath::Power(35,par[1]);
+	Double_t p0=par[0]/TMath::Power(35,-par[1]);
 	return p0*TMath::Power(x[0],-par[1]);
 }
 
@@ -57,8 +57,9 @@ void SolarFlareGenerator::Init()
 	G4cout<<"Initializing SolarFlare event gun..."<<G4endl;
 	f1=new TF1("SolarFlareSpectrum",SolarFlareSpectrum,e_min/keV,e_max/keV,2);
 
-	f1->SetParameters(gamma,flux35);//A alpha beta Epeak
-	f1->SetNpx((int)(e_max-e_min)/keV);
+	f1->SetParameters(flux35,gamma);//A alpha beta Epeak
+	G4int num_points=(G4int)((e_max-e_min)/keV);
+	f1->SetNpx(num_points);
 	ss<<"## SolarFlare settings:"<<G4endl
 		<<"Gamma,F35:"<<gamma<<" "<<flux35<<G4endl
 		<<"Theta,phi (degree):"<<theta/degree<<" "<<phi/degree<<G4endl
@@ -70,13 +71,11 @@ void SolarFlareGenerator::Init()
 	
 	flux=f1->Integral(e_min/keV, e_max/keV);
 	//double int1=f1->Integral(fluxEmin/keV, fluxEmax/keV);
-
-	ss<<"Flux between 35 keV to 1000 keV (ph/cm2*s):"<<flux<<G4endl;
-	//ss<<"Flux for the energy range(keV): "<<fluxEmin/keV<<" - "<<fluxEmax/keV<<G4endl;
-	//if(flux>0)
-	//{
 	total_events=(G4int)(flux*PI*(CircRad/cm)*(CircRad/cm));
-	ss<<"Total events to be simulated for the given flux:"<<total_events<<G4endl;
+
+	ss<<"Flux between "<<e_min/keV<<" "<<e_max/keV<<"keV (ph/cm2*s):"<<flux<<G4endl;
+	ss<<"Total events to be simulated for the given solar flare per second :"<<total_events<<G4endl;
+	ss<<"Total events to be simulated for the given solar flare for 100 seconds:"<<100*total_events<<G4endl;
 	
 	G4cout<<ss.str()<<G4endl;
 

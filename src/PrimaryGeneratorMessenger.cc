@@ -47,11 +47,15 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* the
 		setSolarFlarePolFracCmd=new G4UIcmdWithADouble("/polar/SolarFlare/setPolFrac",this);
 		setSolarFlarePolAngleCmd=new G4UIcmdWithADoubleAndUnit("/polar/SolarFlare/setPolAng",this);
 		setSolarFlareThetaCmd=new G4UIcmdWithADoubleAndUnit("/polar/SolarFlare/setTheta",this);
+		setSolarFlarePhiCmd=new G4UIcmdWithADoubleAndUnit("/polar/SolarFlare/setPhi",this);
+		setSolarFlareEminCmd=new G4UIcmdWithADoubleAndUnit("/polar/SolarFlare/setEmin",this);
+		setSolarFlareEmaxCmd=new G4UIcmdWithADoubleAndUnit("/polar/SolarFlare/setEmax",this);
 
 
 
 
 		setEpeakCmd=new G4UIcmdWithADoubleAndUnit("/polar/GRB/setEpeak",this);
+
 		setEminCmd=new G4UIcmdWithADoubleAndUnit("/polar/GRB/setEmin",this);
 		setEmaxCmd=new G4UIcmdWithADoubleAndUnit("/polar/GRB/setEmax",this);
 
@@ -86,6 +90,9 @@ PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger()
 	delete 	setSolarFlarePolFracCmd;
 	delete 		setSolarFlarePolAngleCmd;
 	delete 		setSolarFlareThetaCmd;
+	delete 		setSolarFlarePhiCmd;
+	delete setSolarFlareEminCmd;
+	delete setSolarFlareEmaxCmd;
 
 
 
@@ -128,17 +135,27 @@ void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newVa
 	else if(command== setSolarFlareSphRadCmd){ 
 		primAction->GetSolarFlareEventGun()->SetSphRad(setSolarFlareSphRadCmd->GetNewDoubleValue(newValue));
 	}
-	else if(command== setCircRadCmd){ 
+	else if(command== setSolarFlareCircRadCmd){ 
+		G4cout<<"Setting CircRadiu: "<<newValue<<G4endl;
 		primAction->GetSolarFlareEventGun()->SetCircRad(setSolarFlareCircRadCmd->GetNewDoubleValue(newValue));
 	}
-	else if(command== setPolFracCmd){
+	else if(command== setSolarFlarePolFracCmd){
 		primAction->GetSolarFlareEventGun()->SetPolFrac(setSolarFlarePolFracCmd->GetNewDoubleValue(newValue));
 	}
-	else if(command== setPolAngleCmd){
+	else if(command== setSolarFlarePolAngleCmd){
 		primAction->GetSolarFlareEventGun()->SetPolAngle(setSolarFlarePolAngleCmd->GetNewDoubleValue(newValue));
 	}
-	else if(command== setThetaCmd){
+	else if(command== setSolarFlareThetaCmd){
 		primAction->GetSolarFlareEventGun()->SetTheta(setSolarFlareThetaCmd->GetNewDoubleValue(newValue));
+	}
+	else if(command== setSolarFlarePhiCmd){
+		primAction->GetSolarFlareEventGun()->SetPhi(setSolarFlarePhiCmd->GetNewDoubleValue(newValue));
+	}
+	else if(command== setSolarFlareEminCmd){ 
+		primAction->GetSolarFlareEventGun()->SetEmin(setSolarFlareEminCmd->GetNewDoubleValue(newValue));
+	}
+	else if(command== setSolarFlareEmaxCmd){ 
+		primAction->GetSolarFlareEventGun()->SetEmax(setSolarFlareEmaxCmd->GetNewDoubleValue(newValue));
 	}
 
 
@@ -161,6 +178,7 @@ void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newVa
 	else if(command== setEpeakCmd){ 
 		primAction->GetGRBEventGun()->SetEpeak(setEpeakCmd->GetNewDoubleValue(newValue));
 	}
+
 	else if(command== setEminCmd){ 
 		primAction->GetGRBEventGun()->SetEmin(setEminCmd->GetNewDoubleValue(newValue));
 	}

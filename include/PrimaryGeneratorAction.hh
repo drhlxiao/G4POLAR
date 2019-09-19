@@ -69,6 +69,7 @@ class PrimaryGeneratorAction: public G4VUserPrimaryGeneratorAction
 
 		GRBGenerator *GetGRBEventGun(){return gunGRB;}
 		SolarFlareGenerator *GetSolarFlareEventGun(){return gunSolarFlare;}
+		TF1 *GetSpectrumModel();
 
 
     private:

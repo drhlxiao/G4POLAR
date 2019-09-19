@@ -37,6 +37,7 @@
 #include "G4PhysListFactory.hh"
 #include "G4VModularPhysicsList.hh"
 #include "GRBGenerator.hh"
+#include "SolarFlareGenerator.hh"
 
 
 #ifdef G4VIS_USE
@@ -152,8 +153,8 @@ int main(int argc,char **argv)
 	{
 		G4cout<<"# set polarization degree: "<<ppol<<G4endl;
 		G4cout<<"# set polarization angle (degree): "<<pphi<<G4endl;
-		primarygen->GetGRBEventGun()->SetPolAngle(pphi*degree);
-		primarygen->GetGRBEventGun()->SetPolFrac(ppol);
+		primarygen->GetSolarFlareEventGun()->SetPolAngle(pphi*degree);
+		primarygen->GetSolarFlareEventGun()->SetPolFrac(ppol);
 	}
 
 
@@ -197,7 +198,6 @@ int main(int argc,char **argv)
 #endif
 
     delete runManager;
-   G4cout<<"Output File: "<<outputFilename<<G4endl;
-
+    G4cout<<"Output File: "<<outputFilename<<G4endl;
     return 0;
 }

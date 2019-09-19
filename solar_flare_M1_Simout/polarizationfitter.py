@@ -15,33 +15,15 @@ kRed=632
 kBlack=1
 kBlue=600
 
-def setHist(h):
-   h.SetLineWidth(2);
-   h.GetXaxis().SetTitle("Azimuthal angle (degree)")
-   h.GetXaxis().CenterTitle(True)
-   h.GetXaxis().SetLabelFont(42)
-   h.GetXaxis().SetLabelSize(0.05)
-   h.GetXaxis().SetTitleSize(0.05)
-   h.GetXaxis().SetTitleFont(42)
-   h.GetYaxis().SetTitle("Counts")
-   h.GetYaxis().CenterTitle(True)
-   h.GetYaxis().SetLabelFont(42)
-   h.GetYaxis().SetLabelSize(0.05)
-   h.GetYaxis().SetTitleSize(0.05)
-   h.GetYaxis().SetTitleFont(42)
-   h.GetZaxis().SetLabelSize(0.035)
-   return h
-
-
-
 config={'NPhi': 90,
-        'NPol': 80,
+        'NPol': 100,
         'dir': './',
+        'rebin':False,
         'GRB': '170206A',
         'hmc': 'quicklook/h1xi', #h1xi or h1xi2 
         'hmc_type': 'ideal', #h1xi or h1xi2 
         'output': 'chi2grid.root',
-        'drawInSame':False
+        'drawInSame': False
         }
 
 
@@ -107,14 +89,20 @@ def drawContour(hchi2, fo):
     cc.Write("chi2_CL")
     return cc
 
+def removeFit(h):
+    pass
+    
 
 def getHXI(fname, conf):
+    if not    os.path.exists(fname):
+        print("%s not exists"%fname)
+        return None
     f=TFile(fname)
     hname=conf['hmc']
     hmc=f.Get(hname)
     if not hmc:
         print 'Can not load histogram in File:', fname
-        sys.exit(0)
+        return None
 
     hmc.SetDirectory(0)
     return hmc
@@ -135,26 +123,32 @@ def getP1HXI(phi,conf=config):
 
 
 def mixModulationCurve(phi, pol, conf=config):
-    
     hxi_p=getP0HXI()
     hxi_p1=getP1HXI(phi)
+    if not hxi_p1 or not hxi_p1:
+        return None
+    if conf['rebin']:
+        hxi_p.Rebin(2)
+        hxi_p1.Rebin(2)
+
+
     hp=hxi_p.Clone()
     hp.Reset()
     hp.Add(hxi_p,hxi_p1,1.0-pol,pol)
     return hp
 
 def getAllHXI(num_phi, num_pol, fo,conf=config):
-    phi_step=180./float(num_phi)
-    pol_step=1./float(num_pol)
-    print 'Phi step:',phi_step
-    print 'POL step:',pol_step
+    #phi_step=180./float(num_phi)
+    #pol_step=1./float(num_pol)
+    #print 'Phi step:',phi_step
+    #print 'POL step:',pol_step
     print 'Preparing simulated modulation curves...'
     hcoll=[]
     fo.cd()
     dirmc=conf['hmc_type']
     fo.mkdir(dirmc)
-    for phi in np.arange(0, 180.0, phi_step):  
-        for pol in np.arange(0, 1.0, pol_step):
+    for phi in np.linspace(0, 180.0, num_phi+1):  
+        for pol in np.linspace(0, 1.0, num_pol+1):
             hist= mixModulationCurve(phi, pol)
             if hist:
                 fo.cd(dirmc)
@@ -171,15 +165,12 @@ def chi2test(hsim, hexp,title):
     scale_factor=float(n_exp)/float(n_sim)
     hsim.Scale(scale_factor)
     chi=hexp.Chi2Test(hsim, "WW CHI2 P")
-
-    
+    cchi=None
     if chi == 0 or config['drawInSame'] :
-        print ' ERROR: chisquare == 0 '
+        print(' ERROR: chisquare == 0 ')
         cchi=TCanvas()
-
         hsim.SetLineColor(2)
         hexp.SetLineColor(4)
-
         maxsim=hsim.GetMaximum()
         maxexp=hexp.GetMaximum()
         if maxsim>maxexp:
@@ -191,15 +182,13 @@ def chi2test(hsim, hexp,title):
         l=TLatex()
         txt='#\chi=%f'%chi
         l.DrawLatex(10,10,txt)
-        cchi.Write(title)
-
-
-    return chi
+        #cchi.Write(title)
+    return chi,cchi
 
 def makeDeltaChi2(h2in):
-
     minValue=h2in.GetMinimum()
-    print 'minimal chisquare value:'
+    print("Minimal chi2")
+
     h2out=h2in.Clone()
     nbinsx=h2in.GetXaxis().GetNbins()
     nbinsy=h2in.GetYaxis().GetNbins()
@@ -226,76 +215,51 @@ def fitPolarization(expfilename,hname,conf=config):
     fout=TFile(config['output'],"recreate")
     fexp=TFile(expfilename)
     hmcexp=fexp.Get(hname)
+
+    fitfun=hmcexp.GetFunction('fitfun')
+    hmcexp.GetListOfFunctions().Remove(fitfun)
+    if conf['rebin']:
+        hmcexp.Rebin(2)
+
     fout.cd()
     hmcexp.Write('hmcexp')
 
     phi_nbins=int(conf['NPhi'])
     pol_nbins=int(conf['NPol'])
-    print 'Preparing simulated modulation curves...'
+    print('Preparing simulated modulation curves...')
     hcoll=getAllHXI(phi_nbins, pol_nbins, fout, conf)
-    htitle='Chi2 distribution %s;Polarization ; Phi (degree)'%config['hmc_type'] 
-    print '========================'
-    print htitle
-    print 'Setting:', "hchi2",htitle,pol_nbins, 0, 1, phi_nbins, 0, 180
-    hchi2=TH2F("hchi2",htitle,pol_nbins, 0, 1, phi_nbins, 0, 180)
-    print 'Number of simulated modulations %d'%len(hcoll)
-    print 'Chisquare testing...'
-
-
+    htitle='Chi2 distribution %s;Polarization level ; Polarization angle (degree)'%config['hmc_type'] 
+    print('========================')
+    pol_shift=(1.0/pol_nbins)*0.5
+    phi_shift=(180./phi_nbins)*0.5
+    hchi2=TH2F("hchi2",htitle, pol_nbins, 0-pol_shift, 1, phi_nbins, 0-phi_shift, 180)
+    print('Chisquare testing...')
 
     chi2dir='chi2test'
     fout.mkdir(chi2dir)
     fout.cd(chi2dir)
-    print 'preparing modulation curves from simulation data_d...'
-
-
-
-
     hmcsim_min=None
     chi2_min=1e10
     paralist=[]
     for row in hcoll:
+        if not row:
+            continue
         phi=row[0]
         pol=row[1] 
         hmcsim=row[2]
+        #no loss of resolution in sim
         title='phi_%.2f_pol_%0.2f'%(phi,pol)
-        print 'Fitting:',phi, pol
-        chi2=chi2test(hmcsim, hmcexp,title)
+        print('Fitting:%f,%f'%(phi, pol))
+        chi2, canvas=chi2test(hmcsim, hmcexp,title)
+        if canvas:
+            fout.cd(chi2dir)
+            canvas.Write(title)
+
         hchi2.Fill(pol,phi,chi2)
         if chi2<chi2_min:
             chi2_min=chi2
             #hmcsim_min=par['hmcsim']
             hmcsim_min=hmcsim
-
-
-        '''
-        para={'hmcsim':hmcsim,
-                'hmcexp': hmcexp,
-                'title':title,
-                'phi': phi,
-                'pol':pol
-                }
-        paralist.append(para)
-
-    #print paralist
-    print 'starting multithresholding ..'
-    results=multiThreadChi2Test(paralist)
-    print 'threading done..'
-
-    for chi2, par in zip(results,paralist):
-        print(par['pol'],par['phi'],chi2)
-        hchi2.Fill(par['pol'],par['phi'],chi2)
-        if chi2<chi2_min:
-            chi2_min=chi2
-            hmcsim_min=par['hmcsim']
-
-    '''
-
-
-
-
-    #    chi2=chi2test(hmcsim, hmcexp,title)
-    #    hchi2.Fill(pol,phi,chi2)
 
 
 
@@ -305,14 +269,18 @@ def fitPolarization(expfilename,hname,conf=config):
 
     gStyle.SetOptStat(0)
     hchi2_delta,min_chi2,min_bin_x, min_bin_y=makeDeltaChi2(hchi2)
-    fig=drawContour(hchi2_delta,fout)
+    print("minchi2: ")
+    print(min_bin_x)
+    print(min_bin_y)
+    print(min_chi2)
 
+    hchi2_delta.Write("hchi2_delta")
+    fig=drawContour(hchi2_delta,fout)
     best_pol=hchi2.GetXaxis().GetBinCenter(min_bin_x)
     best_phi=hchi2.GetYaxis().GetBinCenter(min_bin_y)
     bestfit_msg='Best Fit (pol %.2f, phi: %.2f #\chi2_{min}/NDF: %f/39)'%(best_pol, best_phi, min_chi2)
     hchi2.SetTitle(bestfit_msg)
     hchi2.Write()
-    hchi2_delta.Write("hchi2_delta")
     print bestfit_msg
 
     cm=TCanvas()
@@ -326,11 +294,11 @@ def fitPolarization(expfilename,hname,conf=config):
     hmcexp.SetTitle(bestfit_msg)
     hmcsim_min.SetTitle(bestfit_msg)
     hmcsim_min.GetXaxis().SetTitle("Azimuthal angle (degree)")
-    hmcsim_min.GetYaxis().SetTitle("Counts (degree)")
+    hmcsim_min.GetYaxis().SetTitle("Counts ")
 
 
     hmcexp.GetXaxis().SetTitle("Azimuthal angle (degree)")
-    hmcexp.GetYaxis().SetTitle("Counts (degree)")
+    hmcexp.GetYaxis().SetTitle("Counts ")
     hmcexp.SetLineWidth(2)
     hmcexp.GetXaxis().CenterTitle(True)
     hmcexp.GetYaxis().CenterTitle(True)
@@ -341,7 +309,11 @@ def fitPolarization(expfilename,hname,conf=config):
     hmcexp.GetYaxis().SetLabelSize(0.05)
     hmcexp.GetYaxis().SetTitleSize(0.05)
 
-    hmcsim_min.SetLineColor(kRed)
+    hmcexp.SetLineWidth(2)
+    hmcsim_min.SetLineWidth(2)
+    hmcexp.SetLineColor(kBlue)
+
+    hmcsim_min.SetLineColor(kBlack)
     hmcexp.Draw("ep")
     hmcsim_min.Draw("hist+same")
     #hmcexp.SetTitle(bestfit_msg)
@@ -388,6 +360,8 @@ if __name__=='__main__':
             help='Number bins for polarization degree')
     parser.add_option("-s",  action='store',
             dest='hmcsimname',help='histogram name in the simulated files')
+    parser.add_option("-r",  action='store_true',
+            dest='rebin',help='histogram name in the simulated files')
 
     options, args=parser.parse_args()
     expfilename=''
@@ -410,6 +384,8 @@ if __name__=='__main__':
         config['NPol']=options.polbins
     if options.hmcsimname:
         config['hmc']=options.hmcsimname
+    if options.rebin:
+        config['rebin']=options.rebin
 
     print 'input:', expfilename
     print 'histogram:', hexpmcname

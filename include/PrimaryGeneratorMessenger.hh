@@ -56,7 +56,10 @@ class PrimaryGeneratorMessenger: public G4UImessenger
 		G4UIcmdWithADouble* 	setSolarFlarePolFracCmd;
 		G4UIcmdWithADoubleAndUnit* 		setSolarFlarePolAngleCmd;
 		G4UIcmdWithADoubleAndUnit* 		setSolarFlareThetaCmd;
+		G4UIcmdWithADoubleAndUnit* 		setSolarFlarePhiCmd;
 				 
+		G4UIcmdWithADoubleAndUnit *setSolarFlareEminCmd;
+		G4UIcmdWithADoubleAndUnit *setSolarFlareEmaxCmd;
 
 				 
  

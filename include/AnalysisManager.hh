@@ -29,6 +29,7 @@ class G4RunManager;
 class AnalysisMessenger;
 class DetResponse;
 class GRBGenerator;
+class SolarFlareGenerator;
 
 class AnalysisManager
 {
@@ -177,8 +178,10 @@ class AnalysisManager
 		G4int fStoreSingleBarEvent;
         G4int fnEvents;
         G4int fnAccepted;
+		G4int numEventStored;
 
 		GRBGenerator *grbGun;
+		SolarFlareGenerator *solarFlareGun;
 
 		G4int fPositronEvents;
 

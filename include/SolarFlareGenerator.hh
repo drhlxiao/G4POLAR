@@ -29,7 +29,10 @@ class SolarFlareGenerator
 		void SetEmin(G4double a){e_min=a;}
 		void SetEmax(G4double a){e_max=a;}
 		void SetSphRad(G4double a){SphRad=a;}
-		void SetCircRad(G4double a){CircRad=a;}
+		void SetCircRad(G4double a){
+			CircRad=a;
+			G4cout<<"#CircRad:"<<CircRad<<G4endl; 
+		}
 
 		void SetPolAngle(G4double a){pol_angle=a;}
 		void SetPolFrac(G4double a){pol_frac=a;}
@@ -63,6 +66,7 @@ class SolarFlareGenerator
 		G4int GetTotalNbEvents();
 		G4String GetMessage(){return ss.str();}
 		G4double GetCurrentPolarPhi();
+		TF1 *GetSpectrumModel(){return f1;}
 
 	private:
 
