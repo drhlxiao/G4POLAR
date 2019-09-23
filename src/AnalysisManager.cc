@@ -50,11 +50,39 @@
 #include "DetResponse.hh"
 #include "AnalysisManager.hh"
 #include "GRBGenerator.hh"
+#include "SolarFlareGenerator.hh"
 #include "globallib.hh"
+#include "TF1.h"
+#include "TH1F.h"
+#include "TMath.h"
 
 const G4int cosmic_num_trigger_limit=10;
 
 const float radTodeg=180/3.1415926;
+
+Double_t mcfun(Double_t *x, Double_t *par) {
+  Double_t fitval =
+      par[0] *
+      (1 + par[1] * TMath::Cos((2. * TMath::Pi() / 180.) * (x[0] - par[2])));
+  return fitval;
+}
+
+Double_t unpolarisedfun(Double_t *x, Double_t *par) {
+  Double_t fitval =
+      par[0] *
+      (1 + par[1] * TMath::Cos((4. * TMath::Pi() / 180.) * (x[0] - par[2])));
+  return fitval;
+}
+
+void FitPolarised(TH1F *h, TF1 **fitfun) {
+  *fitfun = new TF1("fitfun", mcfun, 0, 360, 3);
+  h->Fit(*fitfun, "R");
+}
+void FitUnPolarised(TH1F *h, TF1 **fitfun) {
+  *fitfun = new TF1("fitfun", unpolarisedfun, 0, 360, 3);
+  h->Fit(*fitfun, "R");
+}
+
 
 
 AnalysisManager* AnalysisManager::fManager = 0;
@@ -69,6 +97,7 @@ AnalysisManager* AnalysisManager::GetInstance()
 AnalysisManager::AnalysisManager() 
 {
 	/// Birks effect, The kb constant was measured by Xiaofeng
+	numEventStored=0;
 	fkB=0.143*mm/MeV;
 	fRealSim=0;
 	fThreshold=5*keV;
@@ -82,6 +111,7 @@ AnalysisManager::AnalysisManager()
 	fStoreSingleBarEvent=1;
 	fAnalysisMessenger=new AnalysisMessenger(this);
 	detRes=new DetResponse();
+
 	h2hit=new TH2F("h2hit","h2hit;column;row",40,0,40,40,0,40);
 	SetPolarMapBinLabels(h2hit);
 
@@ -93,7 +123,7 @@ AnalysisManager::AnalysisManager()
 	SetPolarMapBinLabels(h2trig_prescaled);
 	//h2na22=new TH2F("h2na22","h2na22 coincidence hit map;column;row",40,0,40,40,0,40);
 
-	h1xi=new TH1F("h1xi","Azimuthal Angle; Azimuthal Angle (degree);Counts",40,0,360);
+	h1xi=new TH1F("h1xi","Azimuthal Angle; Azimuthal Angle (degree) without realistic simulation;Counts",40,0,360);
 	h1xi2=new TH1F("h1xi2",
 			"Azimuthal Angle using smeared energy and non-uniform threshold; Azimuthal Angle (degree);Counts",40,0,360);
 
@@ -152,7 +182,7 @@ AnalysisManager::AnalysisManager()
 
 	fPresCosmic=1;
 	fPresSingle=1;
-	grbGun=NULL;
+	solarFlareGun=NULL;
 	//single and cosmic event counters
 
 }
@@ -200,11 +230,9 @@ void AnalysisManager::BeginOfRunAction(const G4Run *run)
 	fnEvents=0;
 	fnAccepted=0;
 
-
-
 	runManager = G4RunManager::GetRunManager();
 	primaryAction = (PrimaryGeneratorAction*) runManager->GetUserPrimaryGeneratorAction();
-	grbGun=primaryAction->GetGRBEventGun();
+	solarFlareGun=primaryAction->GetSolarFlareEventGun();
 	//init grbGun
 
 }
@@ -227,26 +255,25 @@ void AnalysisManager::EndOfRunAction(const G4Run *run)
 	ss<<"Events with n>=2 && n<cosmic: "<<fnAccepted<<G4endl;
 	ss<<"Events after prescaling using energy after smearing real and threshold:"<<tp->nrecorded<<G4endl;
 	G4int na22positrons=0;
+	TF1 *f1=primaryAction->GetSpectrumModel();
+	if(f1)f1->Write();
+
 	if(primaryAction)
 	{
 		na22positrons=primaryAction->GetSimulatedPositrons();
 		ss<<"Simulated  Positrons:"<<na22positrons<<G4endl;
 		ss<<"Coincidence  Positrons:"<<fPositronEvents<<G4endl;
-		grbGun=primaryAction->GetGRBEventGun();
-		if(grbGun){
-			G4String grbMessage=grbGun->GetMessage();
+		solarFlareGun=primaryAction->GetSolarFlareEventGun();
+		if(solarFlareGun){
+			G4String grbMessage=solarFlareGun->GetMessage();
 			ss<<grbMessage.data()<<G4endl;
-			G4int total=grbGun->GetTotalNbEvents();
+			G4int total=solarFlareGun->GetTotalNbEvents();
 			G4double norfactor=(G4double)total/(G4double)fnEvents;
 			ss<<"Modulation curve normalization factor (Nflux/Nsim):"<<norfactor<<G4endl;
 			//		h1xi->Scale(norfactor);
 			h1xi->SetTitle(Form("Modulation curve normalization factor (Nflux/Nsim): %f", norfactor));
 			h1xi2->SetTitle(Form("Modulation curve normalization factor (Nflux/Nsim): %f", norfactor));
 			//		h1xi2->Scale(norfactor);
-
-
-
-
 		}
 	}
 	ss<<"Entries in the quicklook modulation curve:"<<h1xi->GetEntries()<<G4endl;
@@ -329,15 +356,14 @@ void AnalysisManager::EndOfEventAction(const G4Event *event)
 	FillData(fTotalEdepSum, fVisibleEdepSum, fCollectedEdepSum); 
 	if(tp->nhits<1)return;
 	h1Esum->Fill(esum);
-
 	if(fRealSim>=1)
 	{
 		detRes->SmearEnergy(tp->pm, tp->pm3); 
-		//detRes->SimCrosstalkAndNonuniformity(tp->pm3, tp->adc); 
 		detRes->SimTrigger(tp->pm3,fPresSingle, fPresCosmic, tp);
 	}
 	tp->FillPolarization(fModulationCurveThreshold/keV);
 	if(tp->xiok[0])h1xi->Fill(tp->xideg[0]);
+
 	if(tp->xiok[1])h1xi2->Fill(tp->xideg[1]);
 	if(fRealSim>=1)tp->FillTriggerMap(h2trig, h2trig_prescaled);
 	fTFile->cd();
@@ -355,7 +381,11 @@ void AnalysisManager::EndOfEventAction(const G4Event *event)
 	
 	if(fStoreSingleBarEvent==1||(tp->nhits>1||tp->ntrig>1))
 	{
-		tp->tree->Fill();
+		if(numEventStored<5000)
+		{
+			tp->tree->Fill();
+		}
+		numEventStored++;
 	}
 }
 
@@ -542,9 +572,9 @@ void AnalysisManager::FillData(G4double total[25][64], G4double  vis[25][64], G4
 	//}
 
 	tp->polang=-1;
-	if(grbGun)
+	if(solarFlareGun)
 	{
-		tp->polang=grbGun->GetCurrentPolarPhi()/degree;
+		tp->polang=solarFlareGun->GetCurrentPolarPhi()/degree;
 	}
 
 	//tp->polang=e_perpend.angle(polarization)*radTodeg;
@@ -559,6 +589,7 @@ void AnalysisManager::FillData(G4double total[25][64], G4double  vis[25][64], G4
 
 void AnalysisManager::WriteFile()
 {
+
 
 	G4cout<<"Writing Nb. of events: "<<fnEvents<<G4endl;
 	fTFile->cd();
@@ -575,6 +606,10 @@ void AnalysisManager::WriteFile()
 	h2hit->Write();
 	h2trig->Write();
 	h2trig_prescaled->Write();
+
+  TF1 *fitfun = new TF1("fitfun", mcfun, 0, 360, 3);
+  h1xi->Fit(fitfun,"R");
+  fitfun->Write();
 	h1xi->Write();
 	h1Esum->Write();
 	h1xi2->Write();

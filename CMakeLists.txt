@@ -49,7 +49,7 @@ target_link_libraries(g4POLAR ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} )
 # relies on these scripts being in the current working directory.
 #
 set(g4POLAR_SCRIPTS
-    test.mac
+    test_mac/vis.mac
   )
 
 foreach(_script ${g4POLAR_SCRIPTS})

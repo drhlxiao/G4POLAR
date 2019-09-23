@@ -93,9 +93,6 @@ t2polar::t2polar(bool rs)
 	tree->Branch("track_dist",track_dist, "track_dist[5]/F"); //hits distance
 	tree->Branch("track_phys",track_phys, "track_phys[5]/I");  //physics proce
 	tree->Branch("track_deltaE",track_deltaE, "track_deltaE[5]/F"); //deleta energy deposition
-
-
-
 	evnt = 0;
 	time=0;
 
@@ -133,13 +130,10 @@ void t2polar::FillPolarization(float mcthr)
 		GetAzimuthalAngle(pm3, max_dep[1], 
 				sec_dep[1], max_bar[1],
 				sec_bar[1], bar_dist[1], xideg[1], same_module[1]);
-
-
 		int mbar1=max_bar[1];
 		int mbar2=sec_bar[1];
 		if(mbar1>=0&&mbar2>=0)
 		{
-
 			if(trigger[mbar1]&&trigger[mbar2])
 			{
 				if(xideg[1]>=0&&(bar_dist[1]>=10 ||same_module[1]==-1))
@@ -154,7 +148,6 @@ void t2polar::FillPolarization(float mcthr)
 
 void t2polar::DefaultValues()
 {
-
 	fill_n(track_bar,5,-100); //bar of the first 5 interactions 
 	fill_n(track_dist,5,-100); //bar of the first 5 interactions 
 	fill_n(track_phys,5,0); //bar of the first 5 interactions 

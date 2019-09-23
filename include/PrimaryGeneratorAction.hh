@@ -19,6 +19,7 @@ class G4ParticleTable;
 class PrimaryGeneratorMessenger;
 
 class GRBGenerator;
+class SolarFlareGenerator;
 
 class TTree;
 class TFile;
@@ -55,6 +56,8 @@ class PrimaryGeneratorAction: public G4VUserPrimaryGeneratorAction
         void GenerateANa22Event(G4Event *);
         void GenerateATwo511Event(G4Event *);
 		void GenerateGRB(G4Event *anEvent);
+		void GenerateSolarFlareEvent(G4Event *anEvent);
+
         G4bool InitFile();
         void GetParticleInformation(G4ThreeVector &position, G4ThreeVector &direction, G4double &energy,G4ThreeVector &pol);
         void NextBkgEvent();
@@ -65,12 +68,15 @@ class PrimaryGeneratorAction: public G4VUserPrimaryGeneratorAction
 
 
 		GRBGenerator *GetGRBEventGun(){return gunGRB;}
+		SolarFlareGenerator *GetSolarFlareEventGun(){return gunSolarFlare;}
+		TF1 *GetSpectrumModel();
 
 
     private:
         G4GeneralParticleSource*  fParticleSource;
         G4ParticleGun*  fParticleGun;
 		GRBGenerator *gunGRB;
+		SolarFlareGenerator* gunSolarFlare;
         //	PrimaryGeneratorMessenger* fParticleGunMessenger;
 
         G4String particleSourceFilename;

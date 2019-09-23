@@ -26,32 +26,42 @@ class PrimaryGeneratorMessenger: public G4UImessenger
      	     void SetNewValue( G4UIcommand*, G4String );
      	     
      private:
-     	     PrimaryGeneratorAction* fPrimAction;
-     	     G4UIcmdWithAString*        fSetRootDataFromCmd;
-     	     G4UIcmdWithAString*        fSetGunTypeCmd;
-     	     G4UIcmdWithADouble*        fSetBkgDurationCmd;
-             G4UIcmdWith3VectorAndUnit* fSetSourcePositionCmd;
+     	     PrimaryGeneratorAction* primAction;
+     	     G4UIcmdWithAString*        setRootDataFromCmd;
+     	     G4UIcmdWithAString*        setGunTypeCmd;
+     	     G4UIcmdWithADouble*        setBkgDurationCmd;
+             G4UIcmdWith3VectorAndUnit* setSourcePositionCmd;
              G4UIdirectory *fDir;
 			 
-			 G4UIcmdWithADouble  *fSetAlphaCmd;
-			 G4UIcmdWithADouble  *fSetBetaCmd;
+			 G4UIcmdWithADouble  *setAlphaCmd;
+			 G4UIcmdWithADouble  *setBetaCmd;
 
-			 G4UIcmdWithADouble  *fSetFluxCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetFluxEminCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetFluxEmaxCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetEpeakCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetEminCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetEmaxCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetSphRadCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetCircRadCmd;
-			 G4UIcmdWithADouble *fSetPolFracCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetPolAngleCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetThetaCmd;
-			 G4UIcmdWithADoubleAndUnit  *fSetPhiCmd;
+			 G4UIcmdWithADouble  *setFluxCmd;
+			 G4UIcmdWithADoubleAndUnit  *setFluxEminCmd;
+			 G4UIcmdWithADoubleAndUnit  *setFluxEmaxCmd;
+			 G4UIcmdWithADoubleAndUnit  *setEpeakCmd;
+			 G4UIcmdWithADoubleAndUnit  *setEminCmd;
+			 G4UIcmdWithADoubleAndUnit  *setEmaxCmd;
+			 G4UIcmdWithADoubleAndUnit  *setSphRadCmd;
+			 G4UIcmdWithADoubleAndUnit  *setCircRadCmd;
+			 G4UIcmdWithADouble *setPolFracCmd;
+			 G4UIcmdWithADoubleAndUnit  *setPolAngleCmd;
+			 G4UIcmdWithADoubleAndUnit  *setThetaCmd;
+			 G4UIcmdWithADoubleAndUnit  *setPhiCmd;
 
-			 
+		G4UIcmdWithADouble* setSolarFlareGammaCmd;
+		G4UIcmdWithADouble* setSolarFlareF35Cmd;
+		G4UIcmdWithADoubleAndUnit* setSolarFlareSphRadCmd;
+		G4UIcmdWithADoubleAndUnit* setSolarFlareCircRadCmd;
+		G4UIcmdWithADouble* 	setSolarFlarePolFracCmd;
+		G4UIcmdWithADoubleAndUnit* 		setSolarFlarePolAngleCmd;
+		G4UIcmdWithADoubleAndUnit* 		setSolarFlareThetaCmd;
+		G4UIcmdWithADoubleAndUnit* 		setSolarFlarePhiCmd;
+				 
+		G4UIcmdWithADoubleAndUnit *setSolarFlareEminCmd;
+		G4UIcmdWithADoubleAndUnit *setSolarFlareEmaxCmd;
 
-			 
+				 
  
 
 	

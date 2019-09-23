@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import os
 #from ROOT import TH1F, TH2F, TFile, TTree, TCanvas,gROOT,TList,TLatex
-from ROOT import TH1F, TH2F, TFile, TTree, TCanvas,gROOT,TList,gStyle, TLatex, Double,TMemFile, gDirectory,Long
+from ROOT import TH1F, TH2F, TFile, TTree, TCanvas,gROOT,TList,gStyle, TLatex, Double,TMemFile, gDirectory,Long,gPad, TLegend
 import numpy as np
 import argparse
 import matplotlib
@@ -11,12 +11,32 @@ from multiprocessing import Pool
 import sys
 #from scipy.stats import chi2
 from optparse import OptionParser
+kRed=632
+kBlack=1
+kBlue=600
+
+def setHist(h):
+   h.SetLineWidth(2);
+   h.GetXaxis().SetTitle("Azimuthal angle (degree)")
+   h.GetXaxis().CenterTitle(True)
+   h.GetXaxis().SetLabelFont(42)
+   h.GetXaxis().SetLabelSize(0.05)
+   h.GetXaxis().SetTitleSize(0.05)
+   h.GetXaxis().SetTitleFont(42)
+   h.GetYaxis().SetTitle("Counts")
+   h.GetYaxis().CenterTitle(True)
+   h.GetYaxis().SetLabelFont(42)
+   h.GetYaxis().SetLabelSize(0.05)
+   h.GetYaxis().SetTitleSize(0.05)
+   h.GetYaxis().SetTitleFont(42)
+   h.GetZaxis().SetLabelSize(0.035)
+   return h
 
 
 
 config={'NPhi': 90,
-        'NPol': 40,
-        'dir': '/RAID/simulations/GRB170206A/database/',
+        'NPol': 80,
+        'dir': './',
         'GRB': '170206A',
         'hmc': 'quicklook/h1xi', #h1xi or h1xi2 
         'hmc_type': 'ideal', #h1xi or h1xi2 
@@ -106,9 +126,10 @@ def getP0HXI(fname='phi_0_pol_0.root',conf=config):
 def getP1HXI(phi,conf=config):
     nphi=conf['NPhi']
     phi_div=180./config['NPhi']
-    if phi%phi_div<>0:
+    iphi=phi/phi_div
+    if phi%phi_div!=0:
         return None
-    fname=conf['dir']+'/'+'phi_%d_pol_1.root'%phi
+    fname=conf['dir']+'/'+'phi_%d_pol_1.root'%iphi
     return getHXI(fname, conf)
 
 
@@ -212,7 +233,7 @@ def fitPolarization(expfilename,hname,conf=config):
     pol_nbins=int(conf['NPol'])
     print 'Preparing simulated modulation curves...'
     hcoll=getAllHXI(phi_nbins, pol_nbins, fout, conf)
-    htitle='chi2 distribution %s;Polarization degree; phi_p (degree)'%config['hmc_type'] 
+    htitle='Chi2 distribution %s;Polarization ; Phi (degree)'%config['hmc_type'] 
     print '========================'
     print htitle
     print 'Setting:', "hchi2",htitle,pol_nbins, 0, 1, phi_nbins, 0, 180
@@ -282,24 +303,56 @@ def fitPolarization(expfilename,hname,conf=config):
     
     fout.cd()
 
+    gStyle.SetOptStat(0)
     hchi2_delta,min_chi2,min_bin_x, min_bin_y=makeDeltaChi2(hchi2)
     fig=drawContour(hchi2_delta,fout)
-    hchi2.Write()
-    hchi2_delta.Write("hchi2_delta")
 
     best_pol=hchi2.GetXaxis().GetBinCenter(min_bin_x)
     best_phi=hchi2.GetYaxis().GetBinCenter(min_bin_y)
-    bestfit_msg='Best Fit polarization %.2f, phi, %.2f, #\chi2_{min}%.2f'%(best_pol, best_phi, min_chi2)
+    bestfit_msg='Best Fit (pol %.2f, phi: %.2f #\chi2_{min}/NDF: %f/39)'%(best_pol, best_phi, min_chi2)
+    hchi2.SetTitle(bestfit_msg)
+    hchi2.Write()
+    hchi2_delta.Write("hchi2_delta")
     print bestfit_msg
 
     cm=TCanvas()
-    
+    cm.SetBorderMode(0)
+    cm.SetBorderSize(2)
+    cm.SetTitle(bestfit_msg)
     cm.cd()
-    hmcsim_min.Draw()
-    hmcexp.Draw("same")
+    gStyle.SetOptStat(0)
+    #hmcexp=setHist(hmcexp)
+    #hmcsim=setHist(hmcsim)
     hmcexp.SetTitle(bestfit_msg)
-    la=TLatex()
-    la.DrawLatex(20,20,bestfit_msg)
+    hmcsim_min.SetTitle(bestfit_msg)
+    hmcsim_min.GetXaxis().SetTitle("Azimuthal angle (degree)")
+    hmcsim_min.GetYaxis().SetTitle("Counts (degree)")
+
+
+    hmcexp.GetXaxis().SetTitle("Azimuthal angle (degree)")
+    hmcexp.GetYaxis().SetTitle("Counts (degree)")
+    hmcexp.SetLineWidth(2)
+    hmcexp.GetXaxis().CenterTitle(True)
+    hmcexp.GetYaxis().CenterTitle(True)
+    hmcexp.GetXaxis().SetLabelFont(42)
+    hmcexp.GetXaxis().SetLabelSize(0.05)
+    hmcexp.GetXaxis().SetTitleSize(0.05)
+    hmcexp.GetYaxis().SetLabelFont(42)
+    hmcexp.GetYaxis().SetLabelSize(0.05)
+    hmcexp.GetYaxis().SetTitleSize(0.05)
+
+    hmcsim_min.SetLineColor(kRed)
+    hmcexp.Draw("ep")
+    hmcsim_min.Draw("hist+same")
+    #hmcexp.SetTitle(bestfit_msg)
+    #la=TLatex()
+    #la.DrawLatex(20,20,bestfit_msg)
+    #gPad.BuildLegend()
+    leg = TLegend(0.6,0.7,0.98,0.9)
+    leg.AddEntry(hmcsim_min,"Best Fit",'l')
+    leg.AddEntry(hmcexp,"Solar Flare Expected MC",'lep')
+    leg.Draw()
+
     cm.Write("C_MC_bestFit")
 
 

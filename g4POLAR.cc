@@ -37,6 +37,14 @@
 #include "G4PhysListFactory.hh"
 #include "G4VModularPhysicsList.hh"
 #include "GRBGenerator.hh"
+#include "SolarFlareGenerator.hh"
+
+#include "G4VUserPhysicsList.hh"
+#include "FTFP_BERT.hh"
+#include "QGSP_BIC.hh"
+//#include "FTFP_BERT.hh"
+//FTFP_BERT.hh"
+#include "G4PhysListFactory.hh"
 
 
 #ifdef G4VIS_USE
@@ -143,8 +151,17 @@ int main(int argc,char **argv)
     DetectorConstruction* detConstruction = new DetectorConstruction();
 
     runManager->SetUserInitialization(detConstruction);
+
+
     PhysicsList* physics = new PhysicsList();
     runManager->SetUserInitialization(physics);
+//	  G4String plname = "QGSP_BIC_EMY";  // set however you like ...
+ //  G4PhysListFactory factory;
+  // G4VModularPhysicsList* physlist = factory.GetReferencePhysList(plname);
+//    polarPhysicsList *physlist=new polarPhysicsList();
+   // runManager->SetUserInitialization(physlist);
+
+
     PrimaryGeneratorAction *primarygen=new PrimaryGeneratorAction();
     runManager->SetUserAction(primarygen);
 
@@ -152,8 +169,8 @@ int main(int argc,char **argv)
 	{
 		G4cout<<"# set polarization degree: "<<ppol<<G4endl;
 		G4cout<<"# set polarization angle (degree): "<<pphi<<G4endl;
-		primarygen->GetGRBEventGun()->SetPolAngle(pphi*degree);
-		primarygen->GetGRBEventGun()->SetPolFrac(ppol);
+		primarygen->GetSolarFlareEventGun()->SetPolAngle(pphi*degree);
+		primarygen->GetSolarFlareEventGun()->SetPolFrac(ppol);
 	}
 
 
@@ -197,7 +214,6 @@ int main(int argc,char **argv)
 #endif
 
     delete runManager;
-   G4cout<<"Output File: "<<outputFilename<<G4endl;
-
+    G4cout<<"Output File: "<<outputFilename<<G4endl;
     return 0;
 }
