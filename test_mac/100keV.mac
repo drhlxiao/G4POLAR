@@ -1,0 +1,37 @@
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+#/polar/det/setVolumes detector
+/run/initialize
+/polar/Analysis/setThreshold  5 keV
+/polar/Analysis/setMCThreshold 10 keV
+#pattern
+
+#/polar/Analysis/setMCThreshold 10
+#/polar/Analysis/setPreS 1
+#/polar/Analysis/setPreC 1
+/polar/Analysis/realSim 1
+/polar/Analysis/setCalibrationFileName expdata/threshold_00840_method_2_keV.root
+#trigger
+#/polar/setGunType GRB
+
+
+
+/gps/particle gamma
+/gps/polarization 1 0 0 
+/gps/pos/type Plane
+/gps/pos/shape Square
+/gps/pos/centre  0 0  25 cm
+/gps/pos/halfx  2.5 cm
+/gps/pos/halfy  2.5 cm
+
+/gps/direction 0 0 -1
+
+/gps/energy 100 keV
+
+
+
+
+
+
+/run/beamOn 100000
+

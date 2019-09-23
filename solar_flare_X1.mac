@@ -1,0 +1,35 @@
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+#/polar/det/setVolumes detector
+
+/run/initialize
+/polar/Analysis/setThreshold  5 keV
+/polar/Analysis/setMCThreshold 10 keV
+#pattern
+
+#/polar/Analysis/setMCThreshold 10
+#/polar/Analysis/setPreS 1
+#/polar/Analysis/setPreC 1
+/polar/Analysis/realSim 1
+/polar/Analysis/setCalibrationFileName expdata/threshold_00840_method_2_keV.root
+#trigger
+/polar/setGunType SolarFlare
+
+/polar/SolarFlare/setGamma 3 
+/polar/SolarFlare/setF35 7.893
+#X1 solar flare
+/polar/SolarFlare/setSphRad  300 cm
+/polar/SolarFlare/setCircRad 4 cm
+
+/polar/SolarFlare/setTheta 0 degree
+/polar/SolarFlare/setPhi 90 degree
+#/polar/SolarFlare/setPolFrac 1  
+#/polar/SolarFlare/setPolAng 0 degree
+
+
+/polar/SolarFlare/setEmin  50 keV
+/polar/SolarFlare/setEmax  500 keV
+
+/run/beamOn 336822
+#/run/beamOn 336822
+#/run/beamOn 800000

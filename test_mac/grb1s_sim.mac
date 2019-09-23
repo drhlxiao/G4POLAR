@@ -1,0 +1,26 @@
+
+# reading Geometry from File
+/polar/det/setWorldFile physWorldBox.gdml
+/polar/det/setVolumes module
+/polar/det/setVolumes detector
+#/polar/Analysis/setOutputFileName  analysis_test.root
+/polar/Analysis/setThreshold  5 keV
+/polar/Analysis/setkB  0.143
+/polar/Analysis/setMCThreshold 5 keV
+#/polar/Analysis/realSim 1
+
+/run/initialize
+/gps/particle gamma
+/gps/position 0.2 0.2 20 cm
+/gps/direction 1 1 1
+/gps/polarization 0.2 0.1 0 
+/gps/energy 200 keV
+
+#/polar/Analysis/setCalibrationFileName  data/response.root
+
+#/polar/det/setVolumes spaceLab
+#/polar/readParticleFrom  proton.root
+#/polar/setGunType root
+#/polar/readParticleFrom  grb1s.root
+#
+/run/beamOn  10000
