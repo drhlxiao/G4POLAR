@@ -4,31 +4,30 @@ README for g4POLAR
 
 
 ## 1.Features:
-
-(1) The package use gdml, the mass model was mainly developed by SiweiKong
-(2) Use General Particle Source
-(3) Merlin's optical simulation results have been adopted.
-(4) Energy resolution model: sigma E=sqrt(a+b*E+c*E^2)
-(5) Birks quenching effect taken into account
-(6) Support input particle information in a root file: see Generator/*.C
-(7) Simulation output see src/AnalysisManager.cc and src/t2polar.C
-(8) Outputs contain modulation curves
-(9) Visualization using Qt 
-(10) support geant4.10
+- Geometry defined in gdml
+- Particle generation uses General Particle Source
+- Optical photon simulation enabled by default
+- Energy resolution model: sigma E=sqrt(a+b*E+c*E^2)
+- Birks quenching effect  simulated
+- Support input particle information in a root file: see Generator/*.C
+- Simulation output see src/AnalysisManager.cc and src/t2polar.C
+- Modulation curves generated directly
+- Visualization using Qt 
 
 
 ## 2. Dependencies:
   Geant4.10, ROOT, cmake, make,g++, Linux
 
 ## 3. How to make the program 
-  (1) Set geant4.10 environment
+ - (1) Set geant4.10 environment
    Example:  source <G4INSTALL_DIRECTORY>/bin/geant4.sh
-  (2) cmake CMakeLists.txt
-  (3) make
+ -  (2) cmake CMakeLists.txt
+ - (3) make
 
 ## 4. How to Run:
 
 Usage:
+```sh
 ./g4POLAR [OPTIONS] -m run.mac  -o OUTPUT
 Options:
  -i                  <input.root> 
@@ -40,7 +39,7 @@ Examples:
 see test.mac
 ./g4POLAR -m vis.mac -o testvis.root
 ./g4POLAR  
-
+```
 ## 5. Output root file structure
 
   ```c++
