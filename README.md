@@ -63,9 +63,6 @@ see test.mac
 (1) Uses real data to optimize parameters of the energy resolution model 
 (2) Adds AnalysisManagerMessger.C to control the output with macros
 
- 
 
-
-
-### Change Log
-see README.txt
+### Screenshot
+[!sim/tg2.png]
