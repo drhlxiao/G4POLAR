@@ -42,7 +42,7 @@ see test.mac
 ```
 ## 5. Output ROOT file structure
 
-  ```c++
+  ```cpp
 		TTree *tree = new TTree("polar","polar simulation data");	
 		tree->Branch("pattern",pattern,Form("pattern[%d]/I",1600));      ///over threshold from VA
 		tree->Branch("pm",pm,Form("pm[%d]/F",1600));                     ///primary energy deposition
@@ -69,7 +69,7 @@ see test.mac
 
 ## History
 
-*****
+```sh
 Dec 16 2015:
 (1)PrimaryGeneratorAction:
 add a new particle source: na22,
@@ -86,7 +86,6 @@ move detector readout sim from analysisManager to this class
 
    
 
-*******************************************************
 Dec 18 2015
 
 Implementation of realistic simulation
@@ -120,3 +119,4 @@ Use energy resolutions obtained by Xiaofeng, from the calibration with sources
 Energy resolution function:
 
 R^2=a+b/E
+```
