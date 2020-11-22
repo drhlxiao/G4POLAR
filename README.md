@@ -65,4 +65,4 @@ see test.mac
 
 
 ### Screenshot
-[!sim/tg2.png]
+![visualization](sim/tg2.png)
