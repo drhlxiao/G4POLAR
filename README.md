@@ -42,7 +42,7 @@ see test.mac
 ./g4POLAR  
 
 ## 5. Output root file structure
-	see: src/t2polar.C
+
   ```c++
 		TTree *tree = new TTree("polar","polar simulation data");	
 		tree->Branch("pattern",pattern,Form("pattern[%d]/I",1600));      ///over threshold from VA
