@@ -3,7 +3,7 @@ README for g4POLAR
 ------------------------------------
 
 
-##1.Features:
+## 1.Features:
 
 (1) The package use gdml, the mass model was mainly developed by SiweiKong
 (2) Use General Particle Source
