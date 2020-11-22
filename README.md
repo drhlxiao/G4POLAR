@@ -40,7 +40,7 @@ see test.mac
 ./g4POLAR -m vis.mac -o testvis.root
 ./g4POLAR  
 ```
-## 5. Output root file structure
+## 5. Output ROOT file structure
 
   ```c++
 		TTree *tree = new TTree("polar","polar simulation data");	
