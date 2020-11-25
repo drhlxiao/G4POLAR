@@ -1,5 +1,5 @@
 ## Geant4 simulation package developed for POLAR
-README for g4POLAR
+
 ------------------------------------
 
 
