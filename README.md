@@ -18,7 +18,7 @@
 ### 2. Dependencies:
   Geant4.10, ROOT, cmake, make,g++, Linux
 
-### 3. How to make the program 
+### 3. Compiles the package
  - (1) Set geant4.10 environment
    Example:  source <G4INSTALL_DIRECTORY>/bin/geant4.sh
  -  (2) cmake CMakeLists.txt
